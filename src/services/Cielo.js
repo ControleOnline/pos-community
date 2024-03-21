@@ -1,11 +1,12 @@
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
+import {ACCESS_TOKEN, CLIENT_ID, EMAIL} from "@env";
 
 class Cielo {
   async payment() {
-    const json = {
-      accessToken: 'ffQadIhSGruY81TYO9Zb0POFBLzTQ7beBxf64JofgXxxe4aSfI / BAazOOc0PTf6tFvsezu79fTft2aMF5qMwBh17nAZyWLUjb9GN3',
-      clientID: 'ffQadIhSGruY81TYO9Zb0POFBLzTQ7beBxf64JofgXxxe4aSfI / BAazOOc0PTf6tFvsezu79fTft2aMF5qMwBh17nAZyWLUjb9GN3',
-      email: 'leandro.gabrielcunha@gmail.com',
+    const json = {    
+      accessToken: ACCESS_TOKEN,
+      clientID: CLIENT_ID,
+      email: EMAIL,
       installments: 0,
       items: [
         {
@@ -30,4 +31,4 @@ class Cielo {
   }
 }
 
-export {Cielo};
+export default Cielo;

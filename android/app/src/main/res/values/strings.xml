@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">ConLine PDV</string>
-    <string name="schema_return">conlinepdv</string>
+    <string name="app_name">PDV</string>
+    <string name="schema_return">pdvcontroleonline</string>
 </resources>

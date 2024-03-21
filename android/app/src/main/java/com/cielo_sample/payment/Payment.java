@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
 public class Payment extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "conlinepdv://payment";
+    private static final String CALLBACK = "pdvcontroleonline://payment";
     private static final String SCHEME = "lio";
     private static final String PAYMENT = "payment";
     private static final String CANCEL = "payment-reversal";
