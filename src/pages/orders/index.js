@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
 import api from '../../utils/axiosInstance';
 import Cielo from '../../services/Cielo';
 
@@ -17,10 +17,11 @@ const Orders = () => {
           params: {
             page: 1,
             itemsPerPage: 50,
-            provider: '/people/2',
+            provider: '/people/8',
             'status[0]': 6
           }
         });
+
         setOrders(response.data['hydra:member'].map(order => ({
           ...order,
           orderDate: new Date(order.orderDate).toLocaleDateString('pt-BR'),
@@ -37,6 +38,27 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+    const createInvoice = async (data, orderId) => {
+      const payload = {
+        dueDate: "2024-03-21",
+        payer: "/people/7",
+        status: "/statuses/37",
+        wallet: "/wallets/3",
+        paymentType: "/payment_types/4",
+        price: 80,
+        receiver: "/people/8",
+        order: `orders/${orderId}`
+      };
+    
+      try {
+        const response = await api.post('/invoices', payload);
+        console.log("Invoice created:", response.data);
+      } catch (error) {
+        console.error("Error creating invoice:", error);
+      }
+    }
+  
+ 
   const translateStatus = (status) => {
     const statusMap = {
       'waiting payment': 'Aguardando pagamento',
@@ -53,27 +75,27 @@ const Orders = () => {
   };
 
   const handlePay = async (orderId) => {
-    console.log('Pagamento do pedido', orderId);
     setResponse('Aguarde...');
     const service = new Cielo();
-
-    try {
+  
+    try {  
       const data = await service.payment();
-
-      console.log(data);
+  
       setResponse(JSON.stringify(data, null, 2));
 
-      // if(data.success === false){
-        setErrorModalVisible(true);
-      // }
+      await createInvoice(data, orderId);
 
 
+      setErrorModalVisible(true);
+
+  
     } catch (error) {
       console.error('Erro ao processar o pagamento:', error);
       setResponse('Erro ao processar o pagamento');
       setErrorModalVisible(true);
     }
   };
+  
 
   if (loading) {
     return (
@@ -84,67 +106,60 @@ const Orders = () => {
   }
 
   return (
-    <ScrollView>
-      <Text style={styles.header}>Pedidos:</Text>
-      <View>
-        {orders.map(order => (
-          <View key={order.id} style={styles.boxWrap}>
-
-            <View style={styles.boxHeader}>
-           
-              <Text style={[styles.boxTextColor, styles.boxOrderText]}>Pedido: #{order.id}</Text> 
-              <Text style={[styles.boxTextColor, styles.boxPrice]}>{order.totalPrice}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        <View>
+          {orders.map(order => (
+            <View key={order.id} style={styles.boxWrap}>
+              <View style={styles.boxHeader}>            
+                <Text style={[styles.boxTextColor, styles.boxOrderText]}>Pedido: #{order.id}</Text> 
+                <Text style={[styles.boxTextColor, styles.boxPrice]}>{order.totalPrice}</Text>
+              </View>
+              <View style={styles.boxClient}>
+                <Text style={styles.boxClientText}>CLIENTE: {order.client ? order.client.name  : ''}</Text>
+              </View>
+              <View style={styles.boxContent}>          
+                <Text style={[styles.boxDateText, styles.boxTextColor]}>{order.orderDate}</Text> 
+                <Text style={styles.boxStatusText}>{order.status}</Text>             
+              </View>            
+              <View style={styles.boxPay}>             
+                <TouchableOpacity style={[styles.boxButton]} onPress={() => handlePay(order.id)}>
+                  <Text style={styles.buttonText}>PAGAR</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+          ))}
+        </View>
+      </ScrollView>
 
-
-            <View style={styles.boxClient}>
-              <Text style={styles.boxClientText}>{order.client.name}</Text>
-            </View>
-
-            <View style={styles.boxContent}>          
-              <Text style={[styles.boxDateText, styles.boxTextColor]}>{order.orderDate}</Text> 
-              <Text style={styles.boxStatusText}>{order.status}</Text>             
-            </View>            
-
-
-
-
-            <View style={styles.boxPay}>             
-              <TouchableOpacity style={[styles.boxButton]} onPress={() => handlePay(order.id)}>
-                <Text style={styles.buttonText}>PAGAR</Text>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={errorModalVisible}
+          onRequestClose={() => {
+            setErrorModalVisible(false);
+          }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
+              <Text style={{color: '#000000'}}>{response}</Text>
+              <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
+                <Text style={{ color: 'blue' }}>Fechar</Text>
               </TouchableOpacity>
             </View>
-
           </View>
-        ))}
-      </View>
+        </Modal>
 
-      <View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={errorModalVisible}
-        onRequestClose={() => {
-          setErrorModalVisible(false);
-        }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
-            <Text style={{color: '#000000'}}>{response}</Text>
-            <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
-              <Text style={{ color: 'blue' }}>Fechar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
-
-    </ScrollView>
-    
+    </SafeAreaView>    
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff'
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',

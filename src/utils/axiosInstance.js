@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_TOKEN } from "@env";
+import { API_TOKEN, APP_DOMAIN } from "@env";
 
 // Criação da instância do Axios
 const api = axios.create({
@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     'api-token': API_TOKEN,
     'Content-Type': 'application/json',
+    'app-domain': APP_DOMAIN,
   },
 });
 
