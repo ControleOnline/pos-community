@@ -1,35 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import * as Animatable from 'react-native-animatable';
+import api from "../../utils/axiosInstance";
 
+export default function SignIn( { navigation } ) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-export default function SignIn() {
+    const handleSignIn = () => {
+        const payload = {
+            username: username,
+            password: password
+        };
+
+        api.post('/token', payload)
+        .then(response => {
+            if(response.status === 200 && response.data){
+                // localStorage.setItem('userData', JSON.stringify(response.data));
+                navigation.navigate('Orders');
+
+            }else{
+                console.log('Erro ao realizar login');
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.containerLogo}>
-                <Animatable.View animation="flipInY" style={styles.boxLogomarca}>
-                    <Image                        
-                        source={require('../../assets/icon-controleoline.png')}                        
-                        resizeMode="contain"
-                        style={{  width: '100%' }}
-
-                    />
-                </Animatable.View>
-            </View>
+ 
+            <Animatable.View animation="fadeInLeft" delay={500} style={styles.wrapHeaderLogin}>        
+                <Text style={ styles.headerLoginTitle }>Bem-vindo(a)</Text>
+            </Animatable.View>
+  
 
             <Animatable.View animation="fadeInUp" delay={600} style={ styles.containerLogin }>
-                <View style={ styles.boxLoginHeader }>
-                    <Text style={ styles.boxTextHeader }>Bem-vindo!</Text>
-                </View>
+
                 <TextInput
                     style={ styles.textInput }
                     placeholder="Usuário"
+                    onChangeText={text => setUsername(text)}
                 />
                 <TextInput
                     style={ styles.textInput }
                     placeholder="Senha"
+                    secureTextEntry={true}
+                    onChangeText={text => setPassword(text)}
                 />
-                <TouchableOpacity style={styles.boxLoginButton}>
+                <TouchableOpacity style={styles.boxLoginButton} onPress={handleSignIn}>
                     <Text style={ styles.boxLoginButtonText }>
                         Acessar
                     </Text>
@@ -45,22 +65,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#1B5587',
         justifyContent: 'center',
     },
-    containerLogo: {   
-        flex: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 7,
-        marginBottom: 15              
+    wrapHeaderLogin: {   
+        paddingStart: '5%',
+        marginTop:'14%',
+        marginBottom: '8%',            
     },
-    boxLogomarca: {
-        height: 200,
-        width: 200,
-        backgroundColor: '#fff',
-        borderRadius: 100,
-        padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center', 
-
+    headerLoginTitle: {
+        fontSize: 28,
+        fontWeight: '700',
+        color: '#fff',
     },
     containerLogin: {
         flex: 1,
@@ -71,14 +84,6 @@ const styles = StyleSheet.create({
         paddingTop: 30,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-    },
-    boxLoginHeader: {
-        alignItems: 'center',
-        marginBottom: 30      
-    },
-    boxTextHeader: {
-        fontSize: 22,
-        fontWeight: '700',
     },
     textInput: {
         backgroundColor: '#f4f4f4',
@@ -97,5 +102,4 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#fff'
     }
-
 });
