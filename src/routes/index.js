@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 //Pages
-import SignIn from "../pages/SignIn";
-import Orders from "../pages/Orders";
+import SignIn from "../pages/SignIn/index";
+import Orders from "../pages/orders/index";
 
 const Stack = createNativeStackNavigator();
 
