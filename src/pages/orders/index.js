@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../../utils/axiosInstance';
 import Cielo from '../../services/Cielo';
 
@@ -9,6 +9,7 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [response, setResponse] = useState('');
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -97,7 +98,19 @@ const Orders = () => {
     }
   };
 
+  const addOrderProducts = () => {
+    // {
+    //   "order": "string",
+    //   "product": "string",
+    //   "quantity": 1,
+    //   "price": 0,
+    //   "total": 0
+    // }
+  };
+
   const handleEdit = async (orderId) => {
+    setEditModalVisible(true);
+
     console.log("Edit", orderId);
   };
 
@@ -136,6 +149,7 @@ const Orders = () => {
         </View>
       </ScrollView>
 
+      {/* Visible Modal Error */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -148,10 +162,31 @@ const Orders = () => {
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
             <Text style={{ color: '#000000' }}>{response}</Text>
             <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
-              <Text style={{ color: 'blue' }}>Fechar</Text>
+              <Icon name="close" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
+      </Modal>
+
+      {/* Visible Modal Edit Order */}
+      <Modal
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => {
+          setEditModalVisible(false)
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Pedido de Venda</Text>
+            <Text style={{ color: '#000000' }}>{response}</Text>
+
+            <TouchableOpacity onPress={() => setEditModalVisible(false)} style={{ marginTop: 20 }}>
+              <Icon name="cancel" size={20} color="#000" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
       </Modal>
 
     </SafeAreaView>
