@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import api from "../../utils/axiosInstance";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignIn( { navigation } ) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        checkIfLoggedIn();
+    }, []);
+
+    const checkIfLoggedIn = async () => {
+        try {
+            const userDataString = await AsyncStorage.getItem('userData');
+            if (userDataString) {
+                const userData = JSON.parse(userDataString);
+                if (userData.active === 1) {
+                    navigation.navigate('OrdersPage');
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao verificar se o usuário está logado:', error);
+        }
+    };
 
     const handleSignIn = () => {
         const payload = {
@@ -16,9 +35,13 @@ export default function SignIn( { navigation } ) {
         api.post('/token', payload)
         .then(response => {
             if(response.status === 200 && response.data){
-                // localStorage.setItem('userData', JSON.stringify(response.data));
-                navigation.navigate('Orders');
-
+                AsyncStorage.setItem('userData', JSON.stringify(response.data))
+                .then(() => {
+                    navigation.navigate('OrdersPage');
+                })
+                .catch(error => {
+                    console.log(error);
+                })
             }else{
                 console.log('Erro ao realizar login');
             }
@@ -30,14 +53,10 @@ export default function SignIn( { navigation } ) {
 
     return (
         <SafeAreaView style={styles.container}>
- 
             <Animatable.View animation="fadeInLeft" delay={500} style={styles.wrapHeaderLogin}>        
                 <Text style={ styles.headerLoginTitle }>Bem-vindo(a)</Text>
             </Animatable.View>
-  
-
             <Animatable.View animation="fadeInUp" delay={600} style={ styles.containerLogin }>
-
                 <TextInput
                     style={ styles.textInput }
                     placeholder="Usuário"
