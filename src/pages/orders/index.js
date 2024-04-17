@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import api from '../../utils/axiosInstance';
 import Cielo from '../../services/Cielo';
 
@@ -38,27 +39,27 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
-    const createInvoice = async (data, orderId) => {
-      const payload = {
-        dueDate: "2024-03-21",
-        payer: "/people/7",
-        status: "/statuses/37",
-        wallet: "/wallets/3",
-        paymentType: "/payment_types/4",
-        price: 80,
-        receiver: "/people/8",
-        order: `orders/${orderId}`
-      };
-    
-      try {
-        const response = await api.post('/invoices', payload);
-        console.log("Invoice created:", response.data);
-      } catch (error) {
-        console.error("Error creating invoice:", error);
-      }
+  const createInvoice = async (data, orderId) => {
+    const payload = {
+      dueDate: "2024-03-21",
+      payer: "/people/7",
+      status: "/statuses/37",
+      wallet: "/wallets/3",
+      paymentType: "/payment_types/4",
+      price: 80,
+      receiver: "/people/8",
+      order: `orders/${orderId}`
+    };
+
+    try {
+      const response = await api.post('/invoices', payload);
+      console.log("Invoice created:", response.data);
+    } catch (error) {
+      console.error("Error creating invoice:", error);
     }
-  
- 
+  }
+
+
   const translateStatus = (status) => {
     const statusMap = {
       'waiting payment': 'Aguardando pagamento',
@@ -77,10 +78,10 @@ const Orders = () => {
   const handlePay = async (orderId) => {
     setResponse('Aguarde...');
     const service = new Cielo();
-  
-    try {  
+
+    try {
       const data = await service.payment();
-  
+
       setResponse(JSON.stringify(data, null, 2));
 
       await createInvoice(data, orderId);
@@ -88,14 +89,17 @@ const Orders = () => {
 
       setErrorModalVisible(true);
 
-  
+
     } catch (error) {
       console.error('Erro ao processar o pagamento:', error);
       setResponse('Erro ao processar o pagamento');
       setErrorModalVisible(true);
     }
   };
-  
+
+  const handleEdit = async (orderId) => {
+    console.log("Edit", orderId);
+  };
 
   if (loading) {
     return (
@@ -111,20 +115,20 @@ const Orders = () => {
         <View>
           {orders.map(order => (
             <View key={order.id} style={styles.boxWrap}>
-              <View style={styles.boxHeader}>            
-                <Text style={[styles.boxTextColor, styles.boxOrderText]}>Pedido: #{order.id}</Text> 
+              <View style={styles.boxHeader}>
+                <Text style={[styles.boxTextColor, styles.boxOrderText]}>Pedido: #{order.id}</Text>
                 <Text style={[styles.boxTextColor, styles.boxPrice]}>{order.totalPrice}</Text>
               </View>
               <View style={styles.boxClient}>
-                <Text style={styles.boxClientText}>CLIENTE: {order.client ? order.client.name  : ''}</Text>
+                <Text style={styles.boxClientText}>CLIENTE: {order.client ? order.client.name : ''}</Text>
               </View>
-              <View style={styles.boxContent}>          
-                <Text style={[styles.boxDateText, styles.boxTextColor]}>{order.orderDate}</Text> 
-                <Text style={styles.boxStatusText}>{order.status}</Text>             
-              </View>            
-              <View style={styles.boxPay}>             
-                <TouchableOpacity style={[styles.boxButton]} onPress={() => handlePay(order.id)}>
-                  <Text style={styles.buttonText}>PAGAR</Text>
+              <View style={styles.boxContent}>
+                <Text style={[styles.boxDateText, styles.boxTextColor]}>{order.orderDate}</Text>
+                <Text style={styles.boxStatusText}>{order.status}</Text>
+              </View>
+              <View style={styles.boxPay}>
+                <TouchableOpacity style={[styles.boxButton]} onPress={() => handleEdit(order.id)}>
+                  <Icon name="edit" size={20} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -133,24 +137,24 @@ const Orders = () => {
       </ScrollView>
 
       <Modal
-          animationType="slide"
-          transparent={true}
-          visible={errorModalVisible}
-          onRequestClose={() => {
-            setErrorModalVisible(false);
-          }}>
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
-              <Text style={{color: '#000000'}}>{response}</Text>
-              <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
-                <Text style={{ color: 'blue' }}>Fechar</Text>
-              </TouchableOpacity>
-            </View>
+        animationType="slide"
+        transparent={true}
+        visible={errorModalVisible}
+        onRequestClose={() => {
+          setErrorModalVisible(false);
+        }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
+            <Text style={{ color: '#000000' }}>{response}</Text>
+            <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
+              <Text style={{ color: 'blue' }}>Fechar</Text>
+            </TouchableOpacity>
           </View>
-        </Modal>
+        </View>
+      </Modal>
 
-    </SafeAreaView>    
+    </SafeAreaView>
   );
 };
 
@@ -201,7 +205,7 @@ const styles = StyleSheet.create({
   boxOrderText: {
     fontWeight: '700',
   },
-  boxClient:{
+  boxClient: {
     paddingHorizontal: 10,
     marginBottom: 10,
     marginTop: 10,
