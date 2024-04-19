@@ -18,7 +18,7 @@ export default function SignIn( { navigation } ) {
             if (userDataString) {
                 const userData = JSON.parse(userDataString);
                 if (userData.active === 1) {
-                    navigation.navigate('OrdersPage');
+                    navigation.navigate('HomePage');
                 }
             }
         } catch (error) {
@@ -37,7 +37,7 @@ export default function SignIn( { navigation } ) {
             if(response.status === 200 && response.data){
                 AsyncStorage.setItem('userData', JSON.stringify(response.data))
                 .then(() => {
-                    navigation.navigate('OrdersPage');
+                    navigation.navigate('HomePage');
                 })
                 .catch(error => {
                     console.log(error);

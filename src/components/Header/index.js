@@ -4,7 +4,7 @@ import { Select, Icon } from "native-base";
 
 const Header = () => {
   return (
-    <View style={styles.headerContainer}>
+    <View style={styles.headerContainer}>    
       <TouchableOpacity onPress={() => console.log("Menu clicked")}>
         <Icon name="menu" />
       </TouchableOpacity>

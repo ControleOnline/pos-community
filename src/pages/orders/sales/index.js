@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import api from '../../utils/axiosInstance';
-import Cielo from '../../services/Cielo';
+import api from '../../../utils/axiosInstance';
+import Cielo from '../../../services/Cielo';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -10,11 +10,12 @@ const Orders = () => {
   const [response, setResponse] = useState('');
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-
         const response = await api.get('/orders', {
           params: {
             page: 1,
@@ -40,26 +41,23 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
-  const createInvoice = async (data, orderId) => {
-    const payload = {
-      dueDate: "2024-03-21",
-      payer: "/people/7",
-      status: "/statuses/37",
-      wallet: "/wallets/3",
-      paymentType: "/payment_types/4",
-      price: 80,
-      receiver: "/people/8",
-      order: `orders/${orderId}`
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get('/products');
+
+        console.log(response.data);
+
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+      }
     };
 
-    try {
-      const response = await api.post('/invoices', payload);
-      console.log("Invoice created:", response.data);
-    } catch (error) {
-      console.error("Error creating invoice:", error);
+    if (editModalVisible) {
+      fetchProducts();
     }
-  }
-
+  }, [editModalVisible]);
 
   const translateStatus = (status) => {
     const statusMap = {
@@ -82,15 +80,9 @@ const Orders = () => {
 
     try {
       const data = await service.payment();
-
       setResponse(JSON.stringify(data, null, 2));
-
       await createInvoice(data, orderId);
-
-
       setErrorModalVisible(true);
-
-
     } catch (error) {
       console.error('Erro ao processar o pagamento:', error);
       setResponse('Erro ao processar o pagamento');
@@ -98,21 +90,42 @@ const Orders = () => {
     }
   };
 
-  const addOrderProducts = () => {
-    // {
-    //   "order": "string",
-    //   "product": "string",
-    //   "quantity": 1,
-    //   "price": 0,
-    //   "total": 0
-    // }
+  const createInvoice = async (data, orderId) => {
+    const payload = {
+      dueDate: "2024-03-21",
+      payer: "/people/7",
+      status: "/statuses/37",
+      wallet: "/wallets/3",
+      paymentType: "/payment_types/4",
+      price: 80,
+      receiver: "/people/8",
+      order: `orders/${orderId}`
+    };
+
+    try {
+      const response = await api.post('/invoices', payload);
+      console.log("Invoice created:", response.data);
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+    }
   };
 
   const handleEdit = async (orderId) => {
     setEditModalVisible(true);
-
-    console.log("Edit", orderId);
   };
+
+  const addProductToOrder = (product) => {
+    setSelectedProducts([...selectedProducts, product]);
+  };
+  
+
+  const renderProductItem = ({ item }) => (
+    <TouchableOpacity onPress={() => addProductToOrder(item)}>
+      <Text>{item.product}</Text>
+    </TouchableOpacity>
+  );
+  
+    
 
   if (loading) {
     return (
@@ -178,15 +191,17 @@ const Orders = () => {
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Pedido de Venda</Text>
-            <Text style={{ color: '#000000' }}>{response}</Text>
-
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Adicionar Produtos ao Pedido</Text>
+            <FlatList
+              data={products}
+              renderItem={renderProductItem}
+              keyExtractor={item => item.id}
+            />
             <TouchableOpacity onPress={() => setEditModalVisible(false)} style={{ marginTop: 20 }}>
               <Icon name="cancel" size={20} color="#000" />
             </TouchableOpacity>
           </View>
         </View>
-
       </Modal>
 
     </SafeAreaView>
