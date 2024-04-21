@@ -12,4 +12,7 @@ export default globalStyles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    button: {
+        padding: 14,
+    }
 });

@@ -8,8 +8,8 @@ export default OrderDetails = ({ route, props }) => {
 
     const handleAddProduct = async () => {
         const payload = {
-            order: '63730',
-            product: "1",
+            order: '/orders/63730',
+            product: "/products/1",
             quantity: 1,
             price: 0,
             total: 0
@@ -21,26 +21,20 @@ export default OrderDetails = ({ route, props }) => {
         } catch (error) {
             console.log(error);
         }
-
-
     }
 
     return (
         <View style={globalStyles.container}>
-            <View >
-                <Icon.Button
-                    style={styles.btnADD}
-                    name="add"
-                    backgroundColor="#40b8af"
-                    onPress={handleAddProduct}
-                >
-                    Adicionar Produto
-                </Icon.Button>
-
-
-            </View>
-            <View style={styles.boxTitle}>
+            <View style={styles.boxHeader}>
                 <Text style={styles.boxTitleText}>Lista de Produtos</Text>
+                <Icon.Button
+                        style={globalStyles.button}
+                        name="add"
+                        backgroundColor="#40b8af"
+                        onPress={handleAddProduct}
+                >
+                    Adicionar
+                </Icon.Button>
             </View>
 
             <ProductsList orderId={route.params.orderId} />
@@ -49,16 +43,15 @@ export default OrderDetails = ({ route, props }) => {
 }
 
 const styles = StyleSheet.create({
-    btnADD: {
-        padding: 15,
-    },
-    boxTitle: {
-        paddingVertical: 10,
+    boxHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
     },
     boxTitleText: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 20,
     },
     buttonAdd: {
         backgroundColor: '#FF0000',
