@@ -13,7 +13,7 @@ export default globalStyles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        padding: 14,
+        padding: 11,
         justifyContent: 'center',
         alignItems: 'center',
     }

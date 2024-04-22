@@ -57,41 +57,41 @@ const Orders = ({ navigation }) => {
     }).format(price);
   };
 
-  // const handlePay = async (orderId) => {
-  //   setResponse('Aguarde...');
-  //   const service = new Cielo();
+  const handlePay = async (orderId) => {
+    setResponse('Aguarde...');
+    const service = new Cielo();
 
-  //   try {
-  //     const data = await service.payment();
-  //     setResponse(JSON.stringify(data, null, 2));
-  //     await createInvoice(data, orderId);
-  //     setErrorModalVisible(true);
-  //   } catch (error) {
-  //     console.error('Erro ao processar o pagamento:', error);
-  //     setResponse('Erro ao processar o pagamento');
-  //     setErrorModalVisible(true);
-  //   }
-  // };
+    try {
+      const data = await service.payment();
+      setResponse(JSON.stringify(data, null, 2));
+      await createInvoice(data, orderId);
+      setErrorModalVisible(true);
+    } catch (error) {
+      console.error('Erro ao processar o pagamento:', error);
+      setResponse('Erro ao processar o pagamento');
+      setErrorModalVisible(true);
+    }
+  };
 
-  // const createInvoice = async (data, orderId) => {
-  //   const payload = {
-  //     dueDate: "2024-03-21",
-  //     payer: "/people/7",
-  //     status: "/statuses/37",
-  //     wallet: "/wallets/3",
-  //     paymentType: "/payment_types/4",
-  //     price: 80,
-  //     receiver: "/people/8",
-  //     order: `orders/${orderId}`
-  //   };
+  const createInvoice = async (data, orderId) => {
+    const payload = {
+      dueDate: "2024-03-21",
+      payer: "/people/7",
+      status: "/statuses/37",
+      wallet: "/wallets/3",
+      paymentType: "/payment_types/4",
+      price: 80,
+      receiver: "/people/8",
+      order: `orders/${orderId}`
+    };
 
-  //   try {
-  //     const response = await api.post('/invoices', payload);
-  //     console.log("Invoice created:", response.data);
-  //   } catch (error) {
-  //     console.error("Error creating invoice:", error);
-  //   }
-  // };
+    try {
+      const response = await api.post('/invoices', payload);
+      console.log("Invoice created:", response.data);
+    } catch (error) {
+      console.error("Error creating invoice:", error);
+    }
+  };
 
   const handleEdit = async (orderId) => {
     navigation.navigate('OrderDetails', { orderId: orderId });
@@ -111,7 +111,7 @@ const Orders = ({ navigation }) => {
       <ScrollView>
         <View>
           {orders.map(order => (
-            <TouchableOpacity key={order.id} activeOpacity={0.6} onPress={() => handleEdit(order.id)} style={styles.boxWrap}>
+            <View key={order.id} activeOpacity={0.6} onPress={() => handleEdit(order.id)} style={styles.boxWrap}>
               <View>
                 <View style={styles.boxHeader}>
                   <Text style={[styles.boxTextColor, styles.boxOrderText]}>Pedido: #{order.id}</Text>
@@ -122,7 +122,18 @@ const Orders = ({ navigation }) => {
                   <Text style={styles.boxStatusText}>{order.status}</Text>
                 </View>
               </View>
-            </TouchableOpacity>
+
+              <View style={styles.ordersAction}>
+              <TouchableOpacity  onPress={() => handleEdit(order.id)} style={[globalStyles.button, styles.btnEdit]}>
+                <Text>EDITAR</Text>
+              </TouchableOpacity>
+              
+
+              <TouchableOpacity style={[globalStyles.button, styles.btnPay]}>
+                <Text style={styles.textWhite}>PAGAR</Text>
+              </TouchableOpacity>
+              </View>
+            </View>
           ))}
         </View>
       </ScrollView>
@@ -213,6 +224,22 @@ const styles = StyleSheet.create({
     color: '#5bbf4b',
     fontWeight: '500',
   },
+  ordersAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  btnPay: {
+    backgroundColor: '#40b8af', 
+    flex: 1,
+  },
+  textWhite: {
+    color: '#fff',
+  },
+  btnEdit: {
+    backgroundColor: '#fff',
+    flex: 1,
+  }
 });
 
 export default Orders;
