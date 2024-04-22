@@ -11,7 +11,7 @@ export default ProductsList = (props) => {
 
     useEffect(() => {
         const fetchProductsByOrderId = async () => {
-            const response = await api.get('/products/');
+            const response = await api.get(`/order_products?order=${props.orderId}`);
             try {
                 setProducts(response.data['hydra:member'].map(product => ({
                     ...product,
@@ -33,10 +33,9 @@ export default ProductsList = (props) => {
         }).format(price);
     };
 
-
     // handle to click on add product
-    const handleDetailProduct = () => {
-        console.log('orderId: ', props.orderId);
+    const handleDetailProduct = (productId) => {
+        console.log('productId: ', productId);
     }
 
     if (loading) {
@@ -49,29 +48,25 @@ export default ProductsList = (props) => {
 
     // Retorno Products View
     return (
-
         <ScrollView>
-
             {products.map(product => (
-                <TouchableOpacity key={product.id} activeOpacity={0.6} style={styles.boxWrap}>
+                <TouchableOpacity key={product.id} onPress={() => handleDetailProduct(product.id)} activeOpacity={0.6} style={styles.boxWrap}>
                     <View>
                         <View style={styles.boxHeader}>
                             <Text style={[styles.boxTextColor, styles.boxOrderText]}> #{product.id}</Text>
-                            <Text style={[styles.boxTextColor, styles.boxPrice]}>{product.product}</Text>
+                            <Text style={[styles.boxTextColor, styles.boxPrice]}>{product.product.product}</Text>
                         </View>
                         <View style={styles.boxContent}>
-                            <Text style={[styles.boxDateText, styles.boxTextColor]}>{product.description}</Text>
+                            <Text style={[styles.boxDateText, styles.boxTextColor]}>{product.product.description}</Text>
                         </View>
                         <View style={styles.boxContent}>
-                            <Text style={[styles.boxDateText, styles.boxTextColor]}>{product.type}</Text>
+                            <Text style={[styles.boxDateText, styles.boxTextColor]}>{product.product['@type']}</Text>
                             <Text style={styles.boxStatusText}>{product.price}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
             ))}
         </ScrollView>
-
-
     );
 }
 

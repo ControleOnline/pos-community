@@ -14,7 +14,7 @@ const getAppToken = async () => {
 };
 
 const api = axios.create({
-  baseURL: 'https://api.controleonline.com',
+  baseURL: 'https://new.api.controleonline.com',
   headers: {
     'Content-Type': 'application/json',
     'app-domain': APP_DOMAIN,

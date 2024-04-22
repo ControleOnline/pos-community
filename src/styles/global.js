@@ -14,5 +14,7 @@ export default globalStyles = StyleSheet.create({
     },
     button: {
         padding: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });

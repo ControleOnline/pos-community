@@ -3,24 +3,24 @@ import globalStyles from "../../../styles/global";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProductsList from '../../../components/products/index'
 import api from "../../../utils/axiosInstance";
+import DefaultModal from "../../../components/default/modal/index";
+import { useState } from "react";
+import AddProductToOrder from "../../../components/products/addProductToOrder";
 
 export default OrderDetails = ({ route, props }) => {
 
-    const handleAddProduct = async () => {
-        const payload = {
-            order: '/orders/63730',
-            product: "/products/1",
-            quantity: 1,
-            price: 0,
-            total: 0
-        }
+    const [visibleModal, setVisibleModal] = useState(false);
+    const [isVisibleAddProductToOrder, setIsVisibleAddProductToOrder] = useState(false);
 
-        const response = await api.post('/order_products/' + route.params.orderId, payload);
-        try {
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
+    const handleAddProduct = async () => {
+ 
+        setIsVisibleAddProductToOrder(true);   
+    }
+
+    if(isVisibleAddProductToOrder){
+        return (
+            <AddProductToOrder orderId={route.params.orderId}/>
+        );  
     }
 
     return (
