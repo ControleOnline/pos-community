@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import api from '../../../utils/axiosInstance';
 // import Cielo from '../../../services/Cielo';

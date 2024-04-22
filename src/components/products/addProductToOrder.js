@@ -5,8 +5,7 @@ import globalStyles from "../../styles/global";
 import api from "../../utils/axiosInstance";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export default AddProductToOrder = (props) => {
-    const [selectedItems, setSelectedItems] = useState([]);
+export default AddProductToOrder = ({route, navigation}) => {
     const [products, setProducts] = useState([]);
     const [quantities, setQuantities] = useState({}); 
 
@@ -16,7 +15,6 @@ export default AddProductToOrder = (props) => {
                 const response = await api.get('/products');
                 setProducts(response.data['hydra:member'].map(product => ({
                     ...product,
-                    price: formatPrice(product.price)
                 })));
             } catch (error) {
                 console.log('Error: erro ao realizar consulta de produtos', error);
@@ -50,20 +48,26 @@ export default AddProductToOrder = (props) => {
 
     const addProductToOrder = async (productId, productPrice) => {
         const payload = {
-            order: `orders/${props.orderId}`,
+            order: `orders/${route.params.orderId}`,
             product: `products/${productId}`,
-            quantity: quantities[productId] || 0, 
-            price: 44, 
-            total: 44 * (quantities[productId] || 0) 
+            quantity: quantities[productId] || 1, 
+            price: productPrice, 
+            total: productPrice * (quantities[productId] || 1) 
         }
-
-        const response = await api.post('/order_products', payload);
+    
         try {
+            const response = await api.post('/order_products', payload);
             console.log(response.data);
+            if (response.data) {
+                navigation.navigate('OrderDetails', { orderId: route.params.orderId });
+            } else {
+                console.log('Erro ao adicionar produto');
+            }
         } catch (error) {
             console.log(error);
         }
     }
+    
 
     return (
         <Animatable.View style={globalStyles.container} animation="fadeInUp">
@@ -72,7 +76,7 @@ export default AddProductToOrder = (props) => {
                     <View key={product.id} style={styles.itemWrap}>
                         <View style={styles.boxHeader}>
                             <Text style={[styles.boxTextColor, styles.boxOrderText]}> {product.product}</Text>
-                            <Text style={[styles.boxTextColor, styles.boxPrice]}>{product.price}</Text>
+                            <Text style={[styles.boxTextColor, styles.boxPrice]}>{ formatPrice(product.price) }</Text>
                         </View>
                         <View style={styles.boxContent}>
                             <Text style={[styles.boxTextColor]}>{product.description}</Text>
@@ -82,7 +86,7 @@ export default AddProductToOrder = (props) => {
                                 <TouchableOpacity style={styles.button} onPress={() => handleDecrement(product.id)}>
                                     <Icon name="remove" size={13} color="#fff" />
                                 </TouchableOpacity>
-                                <Text>{quantities[product.id] || 0}</Text>
+                                <Text>{quantities[product.id] || 1}</Text>
                                 <TouchableOpacity style={styles.button} onPress={() => handleIncrement(product.id)}>
                                     <Icon name="add" size={13} color="#fff" />
                                 </TouchableOpacity>
@@ -92,7 +96,7 @@ export default AddProductToOrder = (props) => {
                                     style={globalStyles.button}
                                     name="add"
                                     backgroundColor="#40b8af"
-                                    onPress={() => addProductToOrder(product.id)}
+                                    onPress={() => addProductToOrder(product.id, product.price)}
                                 >
                                     Adicionar
                                 </Icon.Button>

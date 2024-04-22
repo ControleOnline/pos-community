@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, SafeAreaView, ScrollView } from "react-native";
 import api from "../../utils/axiosInstance";
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from "../../styles/global";
 
-// This page is for return list products
 export default ProductsList = (props) => {
+    const { orderId } = props;
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchProductsByOrderId = async () => {
-            const response = await api.get(`/order_products?order=${props.orderId}`);
+            setLoading(true); 
             try {
+                const response = await api.get(`/order_products?order=${orderId}`);
                 setProducts(response.data['hydra:member'].map(product => ({
                     ...product,
                     price: formatPrice(product.price),
                 })));
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
                 console.log("Erro ao realizar no endpoint /products", error);
+            } finally {
+                setLoading(false);
             }
         }
+
         fetchProductsByOrderId();
-    }, []);
+    }, [orderId]);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('pt-BR', {

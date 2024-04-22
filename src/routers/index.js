@@ -4,6 +4,7 @@ import SignInPage from "../pages/sign-in/index";
 import HomePage from "../pages/home/index";
 import OrdersPage from "../pages/orders/sales/index";
 import OrderDetails from "../pages/orders/sales/orderDetails";
+import AddProductToOrder from "../components/products/addProductToOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,11 @@ export default function Routes() {
                 name="OrderDetails"
                 component={OrderDetails}
                 options={{ headerShown: true, title: 'Detalhes do pedido' }}
+            />
+            <Stack.Screen
+                name="AddProductToOrder"
+                component={AddProductToOrder}
+                options={{ headerShown: true, title: 'Adicionar Produto ao Pedido' }}
             />
         </Stack.Navigator>
     );
