@@ -3,7 +3,7 @@ const { StyleSheet } = require("react-native");
 export default globalStyles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f4f4f4',
         paddingTop: 20,
         paddingHorizontal: 20,
     },

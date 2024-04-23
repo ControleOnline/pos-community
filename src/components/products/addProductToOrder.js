@@ -112,7 +112,7 @@ export default AddProductToOrder = ({route, navigation}) => {
 const styles = StyleSheet.create({
     itemWrap: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#ffff',
         marginBottom: 15,
         elevation: 3,
     },
@@ -121,14 +121,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#1B5587',
-    },
-    boxWrap: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-        marginBottom: 15,
-        borderLeftColor: '#40b8af',
-        borderLeftWidth: 7,
-        elevation: 3,
     },
     boxHeader: {
         flexDirection: 'row',

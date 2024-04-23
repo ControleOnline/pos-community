@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     },
     boxWrap: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#fff',
         marginBottom: 15,
         borderLeftColor: '#40b8af',
         borderLeftWidth: 7,

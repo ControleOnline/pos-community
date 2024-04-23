@@ -5,6 +5,7 @@ import HomePage from "../pages/home/index";
 import OrdersPage from "../pages/orders/sales/index";
 import OrderDetails from "../pages/orders/sales/orderDetails";
 import AddProductToOrder from "../components/products/addProductToOrder";
+import Checkout from "../components/checkout/index";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,11 @@ export default function Routes() {
                 name="AddProductToOrder"
                 component={AddProductToOrder}
                 options={{ headerShown: true, title: 'Adicionar Produto ao Pedido' }}
+            />
+            <Stack.Screen 
+                name="Checkout"
+                component={Checkout}
+                options={{ headerShown: true, title: 'Forma de Pagamento' }}
             />
         </Stack.Navigator>
     );

@@ -57,20 +57,22 @@ const Orders = ({ navigation }) => {
     }).format(price);
   };
 
-  const handlePay = async (orderId) => {
-    setResponse('Aguarde...');
-    const service = new Cielo();
+  const handlePay = (orderId) => {
+    navigation.navigate('Checkout');
 
-    try {
-      const data = await service.payment();
-      setResponse(JSON.stringify(data, null, 2));
-      await createInvoice(data, orderId);
-      setErrorModalVisible(true);
-    } catch (error) {
-      console.error('Erro ao processar o pagamento:', error);
-      setResponse('Erro ao processar o pagamento');
-      setErrorModalVisible(true);
-    }
+    // setResponse('Aguarde...');
+    // const service = new Cielo();
+
+    // try {
+    //   const data = await service.payment();
+    //   setResponse(JSON.stringify(data, null, 2));
+    //   await createInvoice(data, orderId);
+    //   setErrorModalVisible(true);
+    // } catch (error) {
+    //   console.error('Erro ao processar o pagamento:', error);
+    //   setResponse('Erro ao processar o pagamento');
+    //   setErrorModalVisible(true);
+    // }
   };
 
   const createInvoice = async (data, orderId) => {
@@ -124,14 +126,14 @@ const Orders = ({ navigation }) => {
               </View>
 
               <View style={styles.ordersAction}>
-              <TouchableOpacity  onPress={() => handleEdit(order.id)} style={[globalStyles.button, styles.btnEdit]}>
-                <Text>EDITAR</Text>
-              </TouchableOpacity>
-              
+                <TouchableOpacity  onPress={() => handleEdit(order.id)} style={[globalStyles.button, styles.btnEdit]}>
+                  <Text style={styles.btnEditText}>EDITAR</Text>
+                </TouchableOpacity>
+                
 
-              <TouchableOpacity style={[globalStyles.button, styles.btnPay]}>
-                <Text style={styles.textWhite}>PAGAR</Text>
-              </TouchableOpacity>
+                <TouchableOpacity  onPress={() => handlePay(order.id)} style={[globalStyles.button, styles.btnPay]}>
+                  <Text style={styles.textWhite}>PAGAR</Text>
+                </TouchableOpacity>
               </View>
             </View>
           ))}
@@ -176,7 +178,7 @@ const styles = StyleSheet.create({
   },
   boxWrap: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     marginBottom: 15,
     borderLeftColor: '#5bbf4b',
     borderLeftWidth: 7,
@@ -239,7 +241,12 @@ const styles = StyleSheet.create({
   btnEdit: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  btnEditText: {
+    color: '#000000',
+    fontWeight: 'bold',
   }
+
 });
 
 export default Orders;
