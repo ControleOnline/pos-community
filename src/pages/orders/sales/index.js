@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, Modal, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
 import api from '../../../utils/axiosInstance';
-// import Cielo from '../../../services/Cielo';
 import globalStyles from '../../../styles/global'
 
 const Orders = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [response, setResponse] = useState('');
-  const [errorModalVisible, setErrorModalVisible] = useState(false);
-  // const [editModalVisible, setEditModalVisible] = useState(false);
-  // const [products, setProducts] = useState([]);
-  // const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -58,41 +51,7 @@ const Orders = ({ navigation }) => {
   };
 
   const handlePay = (orderId) => {
-    navigation.navigate('Checkout');
-
-    // setResponse('Aguarde...');
-    // const service = new Cielo();
-
-    // try {
-    //   const data = await service.payment();
-    //   setResponse(JSON.stringify(data, null, 2));
-    //   await createInvoice(data, orderId);
-    //   setErrorModalVisible(true);
-    // } catch (error) {
-    //   console.error('Erro ao processar o pagamento:', error);
-    //   setResponse('Erro ao processar o pagamento');
-    //   setErrorModalVisible(true);
-    // }
-  };
-
-  const createInvoice = async (data, orderId) => {
-    const payload = {
-      dueDate: "2024-03-21",
-      payer: "/people/7",
-      status: "/statuses/37",
-      wallet: "/wallets/3",
-      paymentType: "/payment_types/4",
-      price: 80,
-      receiver: "/people/8",
-      order: `orders/${orderId}`
-    };
-
-    try {
-      const response = await api.post('/invoices', payload);
-      console.log("Invoice created:", response.data);
-    } catch (error) {
-      console.error("Error creating invoice:", error);
-    }
+    navigation.navigate('Checkout', { orderId: orderId });
   };
 
   const handleEdit = async (orderId) => {
@@ -139,26 +98,6 @@ const Orders = ({ navigation }) => {
           ))}
         </View>
       </ScrollView>
-
-      {/* Visible Modal Error */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={errorModalVisible}
-        onRequestClose={() => {
-          setErrorModalVisible(false);
-        }}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10, color: '#000000' }}>Erro</Text>
-            <Text style={{ color: '#000000' }}>{response}</Text>
-            <TouchableOpacity onPress={() => setErrorModalVisible(false)} style={{ marginTop: 20 }}>
-              <Icon name="close" size={20} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
     </SafeAreaView>
   );
 };

@@ -2,22 +2,14 @@ import { NativeModules } from 'react-native';
 import {ACCESS_TOKEN, CLIENT_ID, EMAIL} from "@env";
 
 class Cielo {
-  async payment() {
+  async payment(paymentCode, items) {
     const json = {    
       accessToken: ACCESS_TOKEN,
       clientID: CLIENT_ID,
       email: EMAIL,
       installments: 0,
-      items: [
-        {
-          name: 'Geral',
-          quantity: 1,
-          sku: '10',
-          unitOfMeasure: 'unidade',
-          unitPrice: 10,
-        },
-      ],
-      paymentCode: 'DEBITO_AVISTA',
+      items: items,
+      paymentCode: paymentCode,
       value: '10',
     };
 

@@ -16,5 +16,9 @@ export default globalStyles = StyleSheet.create({
         padding: 11,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    primary: {
+        backgroundColor: '#40b8af',
+        color: '#000000',
     }
 });
