@@ -144,26 +144,26 @@ export default Checkout = ({ route }) => {
 
             if (paymentCode) {
 
-                await createInvoice(paymentCode, route.params.orderId);
-
                 const service = new Cielo();
                 try {
                     const response = await service.payment(paymentCode, items, totalPrice.toString());
 
                     if (response.success === true) {
 
-                        if(response.code === 2){
-                            showErrorPopup('CANCELADO!');
+                        if(response.result.code === 2){
+                            showErrorPopup(response.result.reason);
                         }
 
-                        if(response.code === 1 && response.reason === "CANCELADO PELO USUÁRIO!"){
-                            showErrorPopup('CANCELADO PELO USUÁRIO!');
+                        if (response.result.code === 1){
+                            showErrorPopup(response.result.reason);
                         }
 
-                        await createInvoice(JSON.stringify(response, null, 2), route.params.orderId);
+                        if(response.result.code !== 1 && response.result.code !== 2) {
+                            await createInvoice(response.result, route.params.orderId);
+                        }
 
                     }else {
-                        showErrorPopup(JSON.stringify(response, null, 2));
+                        showErrorPopup(response);
                     }
 
                 } catch (error) {
@@ -178,21 +178,20 @@ export default Checkout = ({ route }) => {
         }
     };
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
+    function getCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
     
-        const formattedDate = date.getFullYear() + '-' + 
-                              ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
-                              ('0' + date.getDate()).slice(-2);
-    
-        return formattedDate;
+        return `${year}-${month}-${day}`;
     }
 
     const createInvoice = async (data, orderId) => {
         const payload = {
-            dueDate: "2024-11-20",
+            dueDate: getCurrentDate(),
             payer: "/people/7",
-            status: "/statuses/37",
+            status: "/statuses/33",
             wallet: "/wallets/4",
             paymentType: `/payment_types/${selectedPayment}`,
             price: data.paidAmount / 100,
@@ -202,8 +201,6 @@ export default Checkout = ({ route }) => {
 
         try {
             const response = await api.post('/invoices', payload);
-
-            console.log(response);
 
             if(response.status === 201){
                 showErrorPopup(`Fatura #${response.data.id} criada com sucesso!`);
