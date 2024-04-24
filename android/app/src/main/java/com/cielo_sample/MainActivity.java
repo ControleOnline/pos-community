@@ -1,4 +1,4 @@
-package com.controleonline.pdv;
+package com.controleonline.pdvcontroleonline;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

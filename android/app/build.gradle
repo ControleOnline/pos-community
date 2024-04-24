@@ -73,13 +73,13 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.controleonline.pdv"
+    namespace "com.controleonline.pdvcontroleonline"
     defaultConfig {
-        applicationId "com.controleonline.pdv"
+        applicationId "com.controleonline.pdvcontroleonline"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 10
-        versionName "1.0.9"
+        versionName "1.0.10"
     }
     signingConfigs {
         release {

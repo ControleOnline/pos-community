@@ -1,4 +1,4 @@
-package com.controleonline.pdv.payment;
+package com.controleonline.pdvcontroleonline.payment;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;

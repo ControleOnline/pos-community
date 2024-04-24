@@ -3,22 +3,34 @@ import { StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator
 import api from "../../utils/axiosInstance";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from "../../styles/global";
-
+import ErrorPopup from '../default/error';
 import Cielo from '../../services/Cielo';
 
-export default Checkout = ({route}) => {
+export default Checkout = ({ route }) => {
     const [payments, setPayments] = useState([]);
     const [selectedPayment, setSelectedPayment] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [response, setResponse] = useState('');
+
 
     const [orderDetails, setOrderDetails] = useState([]);
 
+    const [popupVisible, setPopupVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+  
+    const showErrorPopup = (message) => {
+      setErrorMessage(message);
+      setPopupVisible(true);
+    };
+  
+    const onClosePopup = () => {
+      setPopupVisible(false);
+    };
+
     useEffect(() => {
         const fetchPaymentTypes = async () => {
-            try{
+            try {
                 const response = await api.get('/payment_types');
-                if(response.data['hydra:member']){
+                if (response.data['hydra:member']) {
                     setLoading(true);
                     const filteredPayments = response.data['hydra:member'].filter(payment => (
                         ![
@@ -27,66 +39,67 @@ export default Checkout = ({route}) => {
 
                         ].includes(payment.paymentType)
                     ))
-                    .map(payment => {
-                        let paymentCode;
-                        switch (payment.paymentType) {
-                            case 'Débito à Vista':
-                                paymentCode = 'DEBITO_AVISTA';
-                                break;
-                            case 'Crédito à Vista':
-                                paymentCode = 'CREDITO_AVISTA';
-                                break;
-                            case 'PIX':
-                                paymentCode = 'PIX';
-                                break;
-                            case 'Crédito Parcelado - Cliente':
-                                paymentCode = 'CREDITO_PARCELADO_CLIENTE';
-                                break;
-                            case 'Crédito Parcelado - Loja':
-                                paymentCode = 'CREDITO_PARCELADO_LOJA';
-                                break;    
-                            default:
-                                paymentCode = null;
-                        }
-                        return {
-                            ...payment,
-                            payment_code: paymentCode
-                        };
-                    });
+                        .map(payment => {
+                            let paymentCode;
+                            switch (payment.paymentType) {
+                                case 'Débito à Vista':
+                                    paymentCode = 'DEBITO_AVISTA';
+                                    break;
+                                case 'Crédito à Vista':
+                                    paymentCode = 'CREDITO_AVISTA';
+                                    break;
+                                case 'PIX':
+                                    paymentCode = 'PIX';
+                                    break;
+                                case 'Crédito Parcelado - Cliente':
+                                    paymentCode = 'CREDITO_PARCELADO_CLIENTE';
+                                    break;
+                                case 'Crédito Parcelado - Loja':
+                                    paymentCode = 'CREDITO_PARCELADO_LOJA';
+                                    break;
+                                default:
+                                    paymentCode = null;
+                            }
+                            return {
+                                ...payment,
+                                payment_code: paymentCode
+                            };
+                        });
 
                     setPayments(filteredPayments);
                     setLoading(false);
-                }else{
+                } else {
                     setLoading(false);
-                    console.log('erro ao realizar consulta.');
+                    showErrorPopup(response.data);
                 }
-            }catch(error) {
-                throw new (error);
-            } 
+            } catch (error) {
+                showErrorPopup(error);
+            }
         }
         fetchPaymentTypes();
     }, []);
 
-    // useEffect(() => {
-    //     const fetchOrders = async () => {
-    //       try {
-    //         const response = await api.get(`/sales/orders/${route.params.orderId}`);
-    
-    //         setOrderDetails(response.data['hydra:member'].map(order => ({
-    //           ...order,
-    //           orderDate: new Date(order.orderDate).toLocaleDateString('pt-BR'),
-    //           status: translateStatus(order.status.status),
-    //           totalPrice: formatPrice(order.price)
-    //         })));
-    //         setLoading(false);
-    //       } catch (error) {
-    //         console.error('Erro ao buscar pedidos:', error);
-    //         setLoading(false);
-    //       }
-    //     };
-    
-    //     fetchOrders();
-    //   }, []);
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const response = await api.get(`/orders?id=${route.params.orderId}`);
+                setOrderDetails(response.data['hydra:member'].map(order => ({ ...order })));
+                setLoading(false);
+            } catch (error) {
+                console.error('Erro ao buscar pedidos:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(price);
+    };
 
     const selectPayment = (paymentId) => {
         setSelectedPayment(paymentId);
@@ -101,88 +114,127 @@ export default Checkout = ({route}) => {
     }
 
     const handlePay = async () => {
+        let items = [];
+        let totalPrice = 0;
 
+        orderDetails.forEach(order => {
+            order.orderProducts.forEach(orderProduct => {
+                const name = orderProduct.product.product;
+                const quantity = orderProduct.quantity;
+                const sku = orderProduct.product.sku;
+                const unitOfMeasure = orderProduct.product.productUnit;
+                const unitPrice = Math.round(orderProduct.price * 100);
+            
+                items.push({
+                    name: name,
+                    quantity: quantity,
+                    sku: sku,
+                    unitOfMeasure: 'unidade',
+                    unitPrice: unitPrice
+                }); 
+            });
+
+            totalPrice += Math.round(order.price * 100);
+        });
+         
         const selectedPaymentObj = payments.find(payment => payment.id === selectedPayment);
-        
+
         if (selectedPaymentObj) {
             const paymentCode = selectedPaymentObj.payment_code;
-            
-            let items = [
-                {
-                  name: 'Geral',
-                  quantity: 1,
-                  sku: '10',
-                  unitOfMeasure: 'unidade',
-                  unitPrice: 10,
-                },
-              ];
 
             if (paymentCode) {
-                    setResponse('Aguarde...');
-                    const service = new Cielo(paymentCode, items);
 
-                    try {
-                      const data = await service.payment();
-                      
-                      setResponse(JSON.stringify(data, null, 2));
+                await createInvoice(paymentCode, route.params.orderId);
 
-                      console.log(data);
+                const service = new Cielo();
+                try {
+                    const response = await service.payment(paymentCode, items, totalPrice.toString());
 
-                      if(data.success === true){
-                        await createInvoice(data, route.params.orderId);
-                      }
+                    if (response.success === true) {
 
-                    } catch (error) {
-                      console.error('Erro ao processar o pagamento:', error);
-                      setResponse('Erro ao processar o pagamento');
+                        if(response.code === 2){
+                            showErrorPopup('CANCELADO!');
+                        }
+
+                        if(response.code === 1 && response.reason === "CANCELADO PELO USUÁRIO!"){
+                            showErrorPopup('CANCELADO PELO USUÁRIO!');
+                        }
+
+                        await createInvoice(JSON.stringify(response, null, 2), route.params.orderId);
+
+                    }else {
+                        showErrorPopup(JSON.stringify(response, null, 2));
                     }
 
+                } catch (error) {
+                    showErrorPopup(`Erro ao processar o pagamento: ${error}`);
+                }
+
             } else {
-                console.log("Payment code não encontrado para o pagamento selecionado.");
+                showErrorPopup("Não foi possivel localizar o parametro payment_code para esta forma de pagamento!");
             }
         } else {
-            console.log("Pagamento selecionado não encontrado.");
+            showErrorPopup("Selecione uma forma de pagamento!");
         }
     };
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+    
+        const formattedDate = date.getFullYear() + '-' + 
+                              ('0' + (date.getMonth() + 1)).slice(-2) + '-' + 
+                              ('0' + date.getDate()).slice(-2);
+    
+        return formattedDate;
+    }
+
     const createInvoice = async (data, orderId) => {
         const payload = {
-          dueDate: "2024-03-21",
-          payer: "/people/7",
-          status: "/statuses/37",
-          wallet: "/wallets/3",
-          paymentType: `/payment_types/${selectedPayment}`,
-          price: data.paidAmount,
-          receiver: "/people/8",
-          order: `orders/${orderId}`
+            dueDate: "2024-11-20",
+            payer: "/people/7",
+            status: "/statuses/37",
+            wallet: "/wallets/4",
+            paymentType: `/payment_types/${selectedPayment}`,
+            price: data.paidAmount / 100,
+            receiver: "/people/8",
+            order: `orders/${orderId}`
         };
-    
+
         try {
-          const response = await api.post('/invoices', payload);
-          console.log("Invoice created:", response.data);
+            const response = await api.post('/invoices', payload);
+
+            console.log(response);
+
+            if(response.status === 201){
+                showErrorPopup(`Fatura #${response.data.id} criada com sucesso!`);
+            }
+            else{
+                showErrorPopup(response);
+            }
+
         } catch (error) {
-          console.error("Error creating invoice:", error);
+            showErrorPopup(error.response.data);
         }
-      };
-    
+    };
+
 
     return (
         <View style={globalStyles.container}>
             <ScrollView style={styles.scrollV}>
-            {payments.map(payment => (
-                <TouchableOpacity key={payment.id} onPress={() => selectPayment(payment.id)}>
-                    <View style={[styles.boxPayment, selectedPayment === payment.id && styles.selectedBoxPayment]}>
-                        <View style={styles.paymentIcon}>
-                            {selectedPayment === payment.id ? <Icon name="check-box" size={24} color="black" /> : <Icon name="check-box-outline-blank" size={24} color="black" />}
+                {payments.map(payment => (
+                    <TouchableOpacity key={payment.id} onPress={() => selectPayment(payment.id)}>
+                        <View style={[styles.boxPayment, selectedPayment === payment.id && styles.selectedBoxPayment]}>
+                            <View style={styles.paymentIcon}>
+                                {selectedPayment === payment.id ? <Icon name="check-box" size={24} color="black" /> : <Icon name="check-box-outline-blank" size={24} color="black" />}
+                            </View>
+                            <View>
+                                <Text>{payment.paymentType}</Text>
+                            </View>
                         </View>
-                        <View>
-                            <Text>{payment.paymentType}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            ))}
+                    </TouchableOpacity>
+                ))}
             </ScrollView>
-        
+
             <View style={styles.boxInfos}>
                 <View style={styles.infos}>
                     <Text style={styles.infoText}>Total</Text>
@@ -195,6 +247,8 @@ export default Checkout = ({route}) => {
                     <Text style={styles.btnText}>PAGAR</Text>
                 </TouchableOpacity>
             </View>
+
+            <ErrorPopup isVisible={popupVisible} onClose={onClosePopup} errorData={errorMessage} />
 
         </View>
     );
@@ -212,7 +266,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     selectedBoxPayment: {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#ffffff',
     },
     paymentIcon: {
         width: 24,
@@ -220,7 +274,7 @@ const styles = StyleSheet.create({
     },
     boxInfos: {
         padding: 20,
-        marginVertical: 30,
+        marginVertical: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc'
     },
@@ -233,17 +287,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    btnPay: {
-        backgroundColor: '#000000',
-        borderRadius: 7,
-        padding: 15,
-    },
     btnText: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
     },
     scrollV: {
-        maxHeight: '70%',
+        maxHeight: 310,
     }
 });

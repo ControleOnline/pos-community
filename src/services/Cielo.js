@@ -2,7 +2,7 @@ import { NativeModules } from 'react-native';
 import {ACCESS_TOKEN, CLIENT_ID, EMAIL} from "@env";
 
 class Cielo {
-  async payment(paymentCode, items) {
+  async payment(paymentCode, items, orderPrice) {
     const json = {    
       accessToken: ACCESS_TOKEN,
       clientID: CLIENT_ID,
@@ -10,7 +10,7 @@ class Cielo {
       installments: 0,
       items: items,
       paymentCode: paymentCode,
-      value: '10',
+      value: orderPrice,
     };
 
     const response = await NativeModules.Payment.payment(JSON.stringify(json));
