@@ -1,5 +1,9 @@
 # PDV Controle Online - React Native
 
+npx --yes react-native@latest init <projectName> --version "latest"
+npm i -g @react-native-community/cli
+npm i -g metro
+npm i  expo
 
 ## Start Dev
 npm start
