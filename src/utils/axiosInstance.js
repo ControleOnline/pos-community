@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { APP_DOMAIN } from "@env";
+import {APP_DOMAIN, API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getAppToken = async () => {
@@ -14,23 +14,26 @@ const getAppToken = async () => {
 };
 
 const api = axios.create({
-  baseURL: 'https://new.api.controleonline.com',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
     'app-domain': APP_DOMAIN,
   },
 });
 
-api.interceptors.request.use(async function (config) {
-  const appToken = await getAppToken();
+api.interceptors.request.use(
+  async function (config) {
+    const appToken = await getAppToken();
 
-  if (appToken && config.url !== '/token') {
-    config.headers['api-token'] = appToken;
-  }
+    if (appToken && config.url !== '/token') {
+      config.headers['api-token'] = appToken;
+    }
 
-  return config;
-}, function (error) {
-  return Promise.reject(error);
-});
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  },
+);
 
 export default api;
