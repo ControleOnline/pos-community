@@ -1,4 +1,4 @@
-# Displays Controle Online
+# PDV Controle Online
 
 npx --yes react-native@latest init <projectName> --version "latest"
 npm i -g @react-native-community/cli
