@@ -37,11 +37,12 @@ export default function Routes() {
                 component={AddProductToOrder}
                 options={{ headerShown: true, title: 'Adicionar Produto ao Pedido' }}
             />
-            <Stack.Screen 
+            <Stack.Screen
                 name="Checkout"
                 component={Checkout}
                 options={{ headerShown: true, title: 'Forma de Pagamento' }}
             />
+
         </Stack.Navigator>
     );
 }

@@ -7,16 +7,28 @@ export default function HomePage({ navigation }) {
     const handleOrders = () => {
         navigation.navigate('SalesOrdersPage');
     }
-
+    const handleDisplays = () => {
+        navigation.navigate('DisplayPage');
+    }
+    const handleNewDisplay = () => {
+        navigation.navigate('DisplayForm');
+    };
     return (
-        <View style={styles.conatainer}>
+        <View style={styles.container}>
             <TouchableOpacity style={styles.wrapButton} onPress={handleOrders}>
                 <Text style={styles.textButton}>Pedidos de Venda</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.wrapButton} onPress={handleDisplays}>
+                <Text style={styles.textButton}>Displays</Text>
+            </TouchableOpacity>
+            { <TouchableOpacity style={styles.wrapButton} onPress={handleNewDisplay}>
+                <Text style={styles.textButton}>Cadastrar Display</Text>
+            </TouchableOpacity>}
         </View>
 
     );
 }
+
 
 const styles = StyleSheet.create({
     conatainer: {
@@ -28,6 +40,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#88b04b',
         alignItems: 'center',
         padding: 20,
+        marginBottom: 10,
     },
     textButton: {
         color: '#fff',

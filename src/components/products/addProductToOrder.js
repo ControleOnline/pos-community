@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import * as Animatable from 'react-native-animatable';
 import globalStyles from "../../styles/global";
-import api from "../../utils/axiosInstance";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default AddProductToOrder = ({route, navigation}) => {
@@ -12,7 +11,7 @@ export default AddProductToOrder = ({route, navigation}) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await api.get('/products');
+                const response = await api.fetch('/products');
                 setProducts(response.data['hydra:member'].map(product => ({
                     ...product,
                 })));

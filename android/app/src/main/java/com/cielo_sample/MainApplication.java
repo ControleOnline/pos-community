@@ -1,4 +1,4 @@
-package com.controleonline.pdvcontroleonline;
+package com.controleonline.pdv;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
@@ -10,7 +10,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
 
-import com.controleonline.pdvcontroleonline.payment.PaymentPackage;
+import com.controleonline.pdv.payment.PaymentPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {

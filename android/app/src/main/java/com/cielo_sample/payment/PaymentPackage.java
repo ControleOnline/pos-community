@@ -1,4 +1,4 @@
-package com.controleonline.pdvcontroleonline.payment;
+package com.controleonline.pdv.payment;
 
 import java.util.Collections;
 import java.util.List;

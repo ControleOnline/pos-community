@@ -1,4 +1,4 @@
-package com.controleonline.pdvcontroleonline.payment;
+package com.controleonline.pdv.payment;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
 public class Payment extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "pdvcontroleonline://payment";
+    private static final String CALLBACK = "display://payment";
     private static final String SCHEME = "lio";
     private static final String PAYMENT = "payment";
     private static final String CANCEL = "payment-reversal";

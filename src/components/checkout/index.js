@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, ActivityIndicator } from "react-native";
-import api from "../../utils/axiosInstance";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from "../../styles/global";
 import ErrorPopup from '../default/error';
@@ -29,7 +28,7 @@ export default Checkout = ({ route }) => {
     useEffect(() => {
         const fetchPaymentTypes = async () => {
             try {
-                const response = await api.get('/payment_types');
+                const response = await api.fetch('/payment_types');
                 if (response.data['hydra:member']) {
                     setLoading(true);
                     const filteredPayments = response.data['hydra:member'].filter(payment => (
@@ -82,7 +81,7 @@ export default Checkout = ({ route }) => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await api.get(`/orders?id=${route.params.orderId}`);
+                const response = await api.fetch(`/orders?id=${route.params.orderId}`);
                 setOrderDetails(response.data['hydra:member'].map(order => ({ ...order })));
                 setLoading(false);
             } catch (error) {

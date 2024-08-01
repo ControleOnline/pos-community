@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, ActivityIndicator, TouchableOpacity, Text, View, SafeAreaView, ScrollView } from "react-native";
-import api from "../../utils/axiosInstance";
 import globalStyles from "../../styles/global";
 
 export default ProductsList = (props) => {
@@ -12,7 +11,7 @@ export default ProductsList = (props) => {
         const fetchProductsByOrderId = async () => {
             setLoading(true); 
             try {
-                const response = await api.get(`/order_products?order=${orderId}`);
+                const response = await api.fetch(`/order_products?order=${orderId}`);
                 setProducts(response.data['hydra:member'].map(product => ({
                     ...product,
                     price: formatPrice(product.price),
