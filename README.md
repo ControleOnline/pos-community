@@ -1,17 +1,38 @@
 # PDV Controle Online
 
-npx --yes react-native@latest init <projectName> --version "latest"
-npm i -g @react-native-community/cli
-npm i -g metro
-npm i  expo
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/controleonline/pdv-community/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/controleonline/pdv-platform-community/?branch=master)
 
-## Start Dev
-npm start
-
-# GERAR KEYSTORE 
-keytool -genkeypair -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+<a href="https://github.com/ControleOnline/pdv-community" target="_blank">
+  <img src="https://www.cielo.com.br/assets_cielo/cielo_store/features/mobile/cielo-lio.png" />
+</a>
 
 
-## Build for android
-cd android
-./gradlew assembleRelease
+### Submodules
+```bash
+git submodule update --init --recursive
+git submodule update --recursive
+```
+
+
+
+### Comercial Contacts
+
+<a href="https://www.controleonline.com/" target="_blank">
+  <img src="https://www.controleonline.com/wp-content/uploads/2018/09/logo_cc_sembranco.svg" />
+</a>
+
+
+
+### Contact for Developers
+
+<a href="https://chat.whatsapp.com/KtplmnuqcXK9nIETLcYBGt" target="_blank">
+  <img src="https://static.whatsapp.net/rsrc.php/yZ/r/JvsnINJ2CZv.svg" />
+</a>
+
+### Top contributors
+
+<a href="https://github.com/ControleOnline/pdv-community/graphs/contributors" target="_blank">
+  <img src="https://contrib.rocks/image?repo=ControleOnline/pdv-community" />
+</a>
+
+
