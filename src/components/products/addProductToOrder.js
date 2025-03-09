@@ -1,191 +1,109 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
-import * as Animatable from 'react-native-animatable';
-import globalStyles from "../../styles/global";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, Button, Modal, FlatList, TouchableOpacity } from 'react-native';
 
-export default AddProductToOrder = ({route, navigation}) => {
-    const [products, setProducts] = useState([]);
-    const [quantities, setQuantities] = useState({}); 
+const ProductScreen = ({ products, onAddToCart }) => {
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedItems, setSelectedItems] = useState({});
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await api.fetch('/products');
-                setProducts(response.data['hydra:member'].map(product => ({
-                    ...product,
-                })));
-            } catch (error) {
-                console.log('Error: erro ao realizar consulta de produtos', error);
-            }
-        }
-        fetchProducts();
-    }, []);
+  const handleAddCustomProduct = (product) => {
+    setSelectedProduct(product);
+    setShowDialog(true);
+  };
 
-    const handleIncrement = (productId) => {
-        setQuantities(prevQuantities => ({
-            ...prevQuantities,
-            [productId]: (prevQuantities[productId] || 1) + 1 
-        }));
+  const handleIncreaseQuantity = (product, index) => {
+    const updatedProducts = [...products];
+    updatedProducts[index].quantity = (updatedProducts[index].quantity || 0) + 1;
+    onAddToCart(updatedProducts[index]);
+  };
+
+  const handleDecreaseQuantity = (product, index) => {
+    const updatedProducts = [...products];
+    if (updatedProducts[index].quantity && updatedProducts[index].quantity > 0) {
+      updatedProducts[index].quantity--;
     }
+    onAddToCart(updatedProducts[index]);
+  };
 
-    const handleDecrement = (productId) => {
-        if (quantities[productId] && quantities[productId] > 1) {
-            setQuantities(prevQuantities => ({
-                ...prevQuantities,
-                [productId]: prevQuantities[productId] - 1
-            }));
-        }
+  const handleSelectItem = (groupId, item) => {
+    const newSelectedItems = { ...selectedItems };
+    if (!newSelectedItems[groupId]) {
+      newSelectedItems[groupId] = [];
     }
-
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        }).format(price);
-    };
-
-    const addProductToOrder = async (productId, productPrice) => {
-        const payload = {
-            order: `orders/${route.params.orderId}`,
-            product: `products/${productId}`,
-            quantity: quantities[productId] || 1, 
-            price: productPrice, 
-            total: productPrice * (quantities[productId] || 1) 
-        }
-    
-        try {
-            const response = await api.post('/order_products', payload);
-            console.log(response.data);
-            if (response.data) {
-                navigation.navigate('OrderDetails', { orderId: route.params.orderId });
-            } else {
-                console.log('Erro ao adicionar produto');
-            }
-        } catch (error) {
-            console.log(error);
-        }
+    if (newSelectedItems[groupId].includes(item)) {
+      newSelectedItems[groupId] = newSelectedItems[groupId].filter((i) => i !== item);
+    } else {
+      newSelectedItems[groupId].push(item);
     }
-    
+    setSelectedItems(newSelectedItems);
+  };
 
-    return (
-        <Animatable.View style={globalStyles.container} animation="fadeInUp">
-            <ScrollView>
-                {products.map(product => (
-                    <View key={product.id} style={styles.itemWrap}>
-                        <View style={styles.boxHeader}>
-                            <Text style={[styles.boxTextColor, styles.boxOrderText]}> {product.product}</Text>
-                            <Text style={[styles.boxTextColor, styles.boxPrice]}>{ formatPrice(product.price) }</Text>
-                        </View>
-                        <View style={styles.boxContent}>
-                            <Text style={[styles.boxTextColor]}>{product.description}</Text>
-                        </View>
-                        <View style={styles.actionsContainer}>
-                            <View style={styles.quantityContainer}>
-                                <TouchableOpacity style={styles.button} onPress={() => handleDecrement(product.id)}>
-                                    <Icon name="remove" size={13} color="#fff" />
-                                </TouchableOpacity>
-                                <Text>{quantities[product.id] || 1}</Text>
-                                <TouchableOpacity style={styles.button} onPress={() => handleIncrement(product.id)}>
-                                    <Icon name="add" size={13} color="#fff" />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.addedContainer}>
-                                <Icon.Button
-                                    style={globalStyles.button}
-                                    name="add"
-                                    backgroundColor="#40b8af"
-                                    onPress={() => addProductToOrder(product.id, product.price)}
-                                >
-                                    Adicionar
-                                </Icon.Button>
-                            </View>
-                        </View>
-                    </View>
-                ))}
-            </ScrollView>
-        </Animatable.View>
-    );
-}
+  const handleSaveCustomToCart = () => {
+    // Simulate saving the custom product to the cart
+    console.log('Saving to cart:', selectedItems);
+    setShowDialog(false);
+  };
 
-const styles = StyleSheet.create({
-    itemWrap: {
-        flex: 1,
-        backgroundColor: '#ffff',
-        marginBottom: 15,
-        elevation: 3,
-    },
-    header: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#1B5587',
-    },
-    boxHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        borderTopEndRadius: 7,
-        borderTopLeftRadius: 7,
-        borderBottomColor: '#ccc',
-        borderBottomWidth: 1,
-    },
-    boxContent: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        borderTopEndRadius: 7,
-        borderTopLeftRadius: 7,
-    },
-    boxOrderText: {
-        fontWeight: '700',
-    },
-    boxTextColor: {
-        color: '#000000',
-    },
-    boxDateText: {
-        color: '#000000',
-        fontSize: 13,
-        fontWeight: '700',
-    },
-    boxPrice: {
-        color: '#5bbf4b',
-        fontSize: 14,
-        fontWeight: '700'
-    },
-    boxStatusText: {
-        padding: 7,
-        borderRadius: 20,
-        fontSize: 13,
-        color: '#5bbf4b',
-        fontWeight: '500',
-    },
-    actionsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 7,
-    },
-    quantityContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    button: {
-        backgroundColor: '#000000',
-        padding: 10,
-        borderRadius: 5,
-        margin: 10,
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    addedContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    }
-});
+  const renderProductItem = ({ item, index }) => (
+    <View key={item.id} style={{ marginBottom: 20, borderWidth: 1, padding: 10 }}>
+      <Text>{item.product}</Text>
+      <Text>{item.description}</Text>
+      <Text>Preço: R$ {item.price}</Text>
+      <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
+      {item.type === 'custom' ? (
+        <Button title="Adicionar Produto Personalizado" onPress={() => handleAddCustomProduct(item)} />
+      ) : (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Button title="-" onPress={() => handleDecreaseQuantity(item, index)} />
+          <Text style={{ marginHorizontal: 10 }}>{item.quantity || 0}</Text>
+          <Button title="+" onPress={() => handleIncreaseQuantity(item, index)} />
+        </View>
+      )}
+    </View>
+  );
+
+  const renderGroupOptions = (groupId) => (
+    <FlatList
+      data={selectedItems[groupId] || []}
+      renderItem={({ item }) => (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5 }}>
+          <Text>{item.label}</Text>
+          <TouchableOpacity onPress={() => handleSelectItem(groupId, item)}>
+            <Text style={{ color: 'blue' }}>{selectedItems[groupId]?.includes(item) ? 'Remover' : 'Adicionar'}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      keyExtractor={(item) => item.id}
+    />
+  );
+
+  return (
+    <View style={{ flex: 1, padding: 20 }}>
+      <FlatList
+        data={products}
+        renderItem={renderProductItem}
+        keyExtractor={(item) => item.id}
+      />
+
+      <Modal visible={showDialog} onRequestClose={() => setShowDialog(false)}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+          <Text style={{ fontSize: 18 }}>Seleção de Produto: {selectedProduct?.product}</Text>
+          <Text>Total: R$ {selectedProduct?.price}</Text>
+
+          {/* Exibir opções do grupo */}
+          {selectedProduct?.groups?.map((group) => (
+            <View key={group.id}>
+              <Text>{group.productGroup}</Text>
+              {renderGroupOptions(group.id)}
+            </View>
+          ))}
+
+          <Button title="Fechar" onPress={() => setShowDialog(false)} />
+          <Button title="Adicionar ao Carrinho" onPress={handleSaveCustomToCart} />
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
+export default ProductScreen;
