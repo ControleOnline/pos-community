@@ -1,3 +1,3 @@
-const env = require('./env.local').env;
+const env = require('./env.local.js').env;
 
-module.exports = { ENV_APP: env };
+module.exports = { APP_ENV: env };

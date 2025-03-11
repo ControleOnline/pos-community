@@ -9,20 +9,23 @@ import {
   SafeAreaView,
 } from 'react-native';
 import globalStyles from '../../../styles/global';
-import ordersStore from '@controleonline/ui-orders/src/store/orders/react';
+import {ordersStore} from '@controleonline/ui-orders/src/store/orders/react';
 
 const Orders = ({navigation}) => {
   console.log(ordersStore);
-  const {state, actions, commit} = ordersStore;
-  const {items, isLoading, error, columns} = state;
+  const {getters, actions, commit} = ordersStore();
+  const {items, isLoading, error, columns} = getters;
 
   useEffect(() => {
-    actions.getItems({
-      page: 1,
-      itemsPerPage: 50,
-      provider: '/people/8',
-      status: [6],
-    });
+    actions.getItems(
+      {commit, getters},
+      {
+        page: 1,
+        itemsPerPage: 50,
+        provider: '/people/8',
+        status: [6],
+      },
+    );
   }, []);
 
   const handlePay = orderId => {
