@@ -2,7 +2,7 @@ export const routes = [
   {
     path: "/",
     component: () =>
-      import("@controleonline/ui-layout/src/layouts/MainLayout.vue"),
+      import("@controleonline/ui-layout/src/vue/layouts/MainLayout.vue"),
     children: [
       {
         name: "LoginIndex",

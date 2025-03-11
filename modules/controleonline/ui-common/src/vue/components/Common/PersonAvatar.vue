@@ -64,7 +64,7 @@
   </template>
   
   <script>
-import UploadForm from "@controleonline/ui-default/src/components/Default/Inputs/Components/UploadInput.vue";
+import UploadForm from "@controleonline/ui-default/src/vue/components/Default/Inputs/Components/UploadInput.vue";
   
   export default {
     props: {

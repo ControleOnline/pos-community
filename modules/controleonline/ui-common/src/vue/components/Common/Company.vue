@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import ListAutocomplete from "@controleonline/ui-common/src/components/Common/ListAutocomplete.vue";
+import ListAutocomplete from "@controleonline/ui-common/src/vue/components/Common/ListAutocomplete.vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {

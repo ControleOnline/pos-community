@@ -1,4 +1,4 @@
-import { i18n } from "@controleonline/ui-common/src/boot/i18n";
+import { i18n } from "@controleonline/ui-common/src/vue/boot/i18n";
 import { computed, reactive } from "vue";
 import Config from "@controleonline/ui-common/src/utils/config";
 

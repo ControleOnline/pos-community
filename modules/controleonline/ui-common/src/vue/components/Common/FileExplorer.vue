@@ -126,11 +126,11 @@
 </template>
 
 <script>
-import MyCompanies from "@controleonline/ui-common/src/components/Common/MyCompanies";
-import UploadForm from "@controleonline/ui-default/src/components/Default/Inputs/Components/UploadInput.vue";
+import MyCompanies from "@controleonline/ui-common/src/vue/components/Common/MyCompanies";
+import UploadForm from "@controleonline/ui-default/src/vue/components/Default/Inputs/Components/UploadInput.vue";
 import { mapGetters, mapActions } from "vuex";
-import DefaultDelete from "@controleonline/ui-default/src/components/Default/DefaultDelete";
-import Html from "@controleonline/ui-default/src/components/Default/Common/DefaultHtml.vue";
+import DefaultDelete from "@controleonline/ui-default/src/vue/components/Default/DefaultDelete";
+import Html from "@controleonline/ui-default/src/vue/components/Default/Common/DefaultHtml.vue";
 
 export default {
   components: {

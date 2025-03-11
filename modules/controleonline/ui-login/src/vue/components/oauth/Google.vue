@@ -8,8 +8,8 @@
       :loading="isLoading"
     >
       <q-avatar size="42px">
-        <img v-if="isLoading" src="../../assets/oauth/google/loading.webp" />
-        <img v-else src="../../assets/oauth/google/logo.svg" />
+        <img v-if="isLoading" src="../../../assets/oauth/google/loading.webp" />
+        <img v-else src="../../../assets/oauth/google/logo.svg" />
       </q-avatar>
       <q-tooltip>
         {{ tt("login", "message", "with_google") }}

@@ -4,7 +4,7 @@
   "author": "ControleOnline",
   "description": "ControleOnline Common Quasar UI Component",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "src/vue/index.js",
   "scripts": {},
   "repository": {
     "type": "git",
