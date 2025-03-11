@@ -13,3 +13,6 @@
 [submodule "modules/controleonline/ui-default"]
 	path = modules/controleonline/ui-default
 	url = https://github.com/ControleOnline/ui-default.git
+[submodule "modules/controleonline/ui-products"]
+	path = modules/controleonline/ui-products
+	url = https://github.com/ControleOnline/ui-products.git

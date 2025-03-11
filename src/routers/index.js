@@ -1,11 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// Pages
-import SignInPage from "../pages/sign-in/index";
-import HomePage from "../pages/home/index";
-import OrdersPage from "../pages/orders/sales/index";
-import OrderDetails from "../pages/orders/sales/orderDetails";
-import AddProductToOrder from "../components/products/addProductToOrder";
-import Checkout from "../components/checkout/index";
+import SignInPage from "@controleonline/ui-login/src/react/pages/sign-in/index";
+import HomePage from "@controleonline/ui-shop/src/react/pages/home/index";
+import OrdersPage from "@controleonline/ui-orders/src/react/pages/orders/sales/index";
+import OrderDetails from "@controleonline/ui-orders/src/react/pages/orders/sales/orderDetails";
+import AddProductToOrder from "@controleonline/ui-products/src/react/components/products/addProductToOrder";
+import Checkout from "@controleonline/ui-orders/src/react/components/checkout/index";
 
 const Stack = createNativeStackNavigator();
 
