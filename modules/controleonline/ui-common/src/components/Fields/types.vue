@@ -1,13 +1,12 @@
-<template v-if="loaded">
-  <DefaultTable :configs="configs" v-if="configs" />
+<template>
+  <DefaultTable :configs="configs" v-if="loaded" />
 </template>
 <script>
-import DefaultTable from "@controleonline/ui-default/src/components/Default/DefaultTable";
-import { mapActions, mapGetters } from "vuex";
 
+import { mapActions, mapGetters } from "vuex";
 export default {
   components: {
-    DefaultTable,
+
   },
   props: {
     context: {
@@ -31,7 +30,7 @@ export default {
   },
   data() {
     return {
-      loaded: null,
+      loaded: false,
     };
   },
   created() {
@@ -41,6 +40,8 @@ export default {
     this.$store.commit(this.configs.store + "/SET_FILTERS", filters);
     this.loaded = true;
   },
+  watch: {},
+  mounted() {},
   methods: {},
 };
 </script>

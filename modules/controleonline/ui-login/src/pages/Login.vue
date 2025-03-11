@@ -1,23 +1,78 @@
 <template>
   <q-page class="row justify-center">
-    <!-- LOGIN FORM -->
-    <LoginPage :signinDialogStatus="dialogs.signup.visible" @logged="onLogged" @signup="onSignUp" />
+    <div class="container text-center q-gutter-y-md">
+      <div class="login-logo-conteiner q-pa-lg">
+        <q-img
+          v-if="defaultCompany.logo"
+          :src="'//' + defaultCompany.logo.domain + defaultCompany.logo.url"
+          class=""
+        />
+      </div>
+      <q-card class="q-mb-lg q-pa-md">
+        <q-card-section class="q-pt-md">
+          <div class="text-h6">
+            <h4 class="q-ma-none login-label">
+              {{ $tt("login", "label", "title") }}
+            </h4>
+          </div>
+        </q-card-section>
 
-    <!-- SIGNUP STEP TO STEP -->
-    <q-dialog maximized no-backdrop-dismiss v-model="dialogs.signup.visible" transition-show="slide-left"
-      transition-hide="slide-right">
-      <SignUpPage @created="onCreated" @company="onCompany" @registered="onRegistered"
-        @signIn="dialogs.signup.visible = false" :signUpFields="signUpFields" :defaultCompany="defaultCompany" />
-    </q-dialog>
+        <q-card-section>
+          <LoginPage v-if="$route.name == 'LoginIndex'" @logged="onLogged" />
+          <SignUpPage
+            v-if="$route.name == 'CreateUserIndex'"
+            @created="onCreated"
+            @company="onCompany"
+            @logged="onLogged"
+            :defaultCompany="defaultCompany"
+          />
+          <RecoveryPassword v-if="$route.name == 'ForgotPassword'" />
+        </q-card-section>
+
+        <div class="column q-px-md q-gutter-y-sm">
+          <q-btn
+            v-if="$route.name != 'CreateUserIndex'"
+            unelevated
+            color="grey-7"
+            outline
+            :label="$tt('login', 'label', 'register')"
+            :to="{ name: 'CreateUserIndex' }"
+          />
+
+          <q-btn
+            v-if="$route.name != 'LoginIndex'"
+            unelevated
+            color="grey-7"
+            outline
+            :label="$tt('login', 'label', 'login')"
+            :to="{ name: 'LoginIndex' }"
+          />
+
+          <q-btn
+            v-if="$route.name != 'ForgotPassword'"
+            style="
+              color: #19afbd;
+              text-transform: none;
+              text-decoration: underline;
+            "
+            :label="$tt('login', 'label', 'forgotPassword')"
+            flat
+            :to="{ name: 'ForgotPassword' }"
+          />
+        </div>
+        <Oauth />
+      </q-card>
+    </div>
   </q-page>
 </template>
 
 <script>
 import { LocalStorage } from "quasar";
 import { mapActions, mapGetters } from "vuex";
-import LoginPage from "../components/user/login/Index.vue";
-import SignUpPage from "../components/user/signup/Index.vue";
-
+import LoginPage from "../components/user/login";
+import SignUpPage from "../components/user/signup";
+import RecoveryPassword from "../components/user/recovery";
+import Oauth from "../components/oauth/Oauth";
 
 export default {
   name: "PageIndex",
@@ -25,34 +80,23 @@ export default {
   components: {
     LoginPage,
     SignUpPage,
+    RecoveryPassword,
+    Oauth,
   },
 
   data() {
-    return {
-      dialogs: {
-        signup: {
-          visible: false,
-        },
-      },
-    };
+    return {};
   },
 
   computed: {
     ...mapGetters({
       indexRoute: "auth/indexRoute",
-      signUpFields: "auth/signUpFields",
       defaultCompany: "people/defaultCompany",
     }),
-
-
-
-    logged() {
-      return this.$store.getters["auth/user"];
-    },
   },
 
   mounted() {
-    if (this.isLogged()) {
+    if (this.$auth.isLogged) {
       if (this.$route.query.redirect) {
         this.$router.push(this.$route.query.redirect);
       } else {
@@ -62,43 +106,19 @@ export default {
   },
 
   methods: {
-
-    isLogged() {
-      return this.$store.getters["auth/user"] !== null && this.$store.getters["auth/user"].username;
-    },
     goToIndexRoute() {
-      this.$router.push({ name: 'HomeIndex' });
+      this.$router.push({ name: "HomeIndex" });
     },
 
     // when user logged is succeeded
 
     onLogged(user) {
-      if (this.isLogged()) {
+      if (this.$auth.isLogged) {
         if (this.$route.query.redirect) {
           this.$router.push(this.$route.query.redirect);
         } else {
           this.goToIndexRoute();
         }
-      }
-    },
-
-    // when request signup
-
-    onSignUp() {
-      this.showDialog("signup");
-    },
-
-    // when user created signup step 1
-
-    onCreated(user) {
-      this.$store.dispatch("auth/logIn");
-
-      if (this.isLogged()) {
-        this.$q.notify({
-          message: `Agora você esta logado como "${user.username}"`,
-          position: "top",
-          type: "positive",
-        });
       }
     },
 
@@ -117,45 +137,6 @@ export default {
         }
       }
     },
-
-    // when signup process is finished
-
-    onRegistered(user) {
-      this.$q.notify({
-        message: "Seu cadastro foi realizado com sucesso",
-        position: "bottom",
-        type: "positive",
-      });
-
-      if (this.isLogged()) {
-        if (this.$route.query.redirect) {
-          this.$router.push(this.$route.query.redirect);
-        } else {
-          this.goToIndexRoute();
-        }
-      } else {
-        this.goToIndexRoute();
-      }
-    },
-
-    showDialog(name) {
-      if (name !== false) {
-        this.dialogs[name].visible = true;
-      }
-
-      // hide all opened dialogs
-
-      let time = name === false ? 0 : 600;
-
-      setTimeout(() => {
-        for (let dialogName in this.dialogs) {
-          if (dialogName !== name && this.dialogs[dialogName].visible)
-            this.dialogs[dialogName].visible = false;
-        }
-      }, time);
-    },
-
-
   },
 };
 </script>

@@ -1,5 +1,4 @@
-import { api } from "@controleonline/../../src/boot/api";
-import SubmissionError from "@controleonline/ui-common/src/error/SubmissionError";
+import { api } from "@controleonline/ui-common/src/api";
 import * as types from "./mutation_types";
 import { LocalStorage } from "quasar";
 
@@ -9,21 +8,14 @@ export const signIn = ({ commit }, values) => {
 
   return api
     .fetch("token", { method: "POST", body: values })
-    .then((data) => {      
+    .then((data) => {
       commit(types.LOGIN_SET_USER, data);
+      commit(types.LOGIN_SET_IS_LOGGED_IN, true);
       return data;
     })
     .catch((e) => {
-      if (e instanceof SubmissionError) {
-        commit(types.LOGIN_SET_VIOLATIONS, e.errors);
-
-        commit(types.LOGIN_SET_ERROR, e.errors._error);
-
-        throw new Error(e.errors._error);
-      }
-
       commit(types.LOGIN_SET_ERROR, e.message);
-      throw new Error(e.message);
+      throw e;
     })
     .finally(() => {
       commit(types.LOGIN_SET_ISLOADING, false);
@@ -46,18 +38,14 @@ export const gSignIn = ({ commit }, values) => {
 
   return api
     .fetch("oauth/google/return", { method: "POST", params: values })
-    .then((response) => {      
+    .then((response) => {
       commit(types.LOGIN_SET_USER, response.response.data);
+      commit(types.LOGIN_SET_IS_LOGGED_IN, true);
       return response;
     })
     .catch((e) => {
-      if (e instanceof SubmissionError) {
-        commit(types.LOGIN_SET_VIOLATIONS, e.errors);
-        commit(types.LOGIN_SET_ERROR, e.errors._error);
-        throw new Error(e.errors._error);
-      }
       commit(types.LOGIN_SET_ERROR, e.message);
-      throw new Error(e.message);
+      throw e;
     })
     .finally(() => {
       commit(types.LOGIN_SET_ISLOADING, false);
@@ -69,7 +57,7 @@ export const signUp = ({ commit }, values) => {
   commit(types.LOGIN_SET_ISLOADING);
 
   return api
-    .fetch("accounts", { method: "POST", body: values })
+    .fetch("users/create-account", { method: "POST", body: values })
     .then((response) => {
       commit(types.LOGIN_SET_ISLOADING, false);
 
@@ -78,19 +66,15 @@ export const signUp = ({ commit }, values) => {
     .then((data) => {
       if (data.response) {
         if (data.response.success === true)
-          commit(types.LOGIN_SET_CREATED, data);
-
+          commit(types.LOGIN_SET_USER, data.response.data);
+        commit(types.LOGIN_SET_IS_LOGGED_IN, true);
         return data.response;
       }
 
       return null;
     })
-    .catch((e) => {
+    .finally(() => {
       commit(types.LOGIN_SET_ISLOADING, false);
-
-      if (e instanceof SubmissionError) throw new Error(e.errors._error);
-
-      throw new Error(e.message);
     });
 };
 
@@ -98,34 +82,16 @@ export const signUp = ({ commit }, values) => {
  * Do login with just created user
  */
 export const logIn = ({ commit, state }, user = null) => {
-  let data = user;
-
-  if (data === null && state.created !== null)
-    data = {
-      api_key: state.created.token,
-      username: state.created.username,
-      people: state.created.people,
-      roles: "",
-      company: state.created.company,
-    };
-
-  if (data === null) throw new Error("Can not signin without a user");
-
-  commit(types.LOGIN_SET_USER, data);
+  commit(types.LOGIN_SET_USER, user);
+  commit(types.LOGIN_SET_IS_LOGGED_IN, true);
 };
 
 export const logOut = ({ commit }) => {
   commit(types.LOGIN_SET_USER, null);
+  commit(types.LOGIN_SET_IS_LOGGED_IN, false);
+  LocalStorage.clear();
 };
 
 export const setIndexRoute = ({ commit }, indexRoute) => {
   commit(types.LOGIN_SET_INDEX_ROUTE, indexRoute);
-};
-
-export const setSignUpFields = ({ commit }, signUpFields) => {
-  commit(types.SIGN_UP_FIELDS, signUpFields);
-};
-
-export const setSignUpCustomBg = ({ commit }, signUpCustomBg) => {
-  commit(types.SIGN_UP_CUSTOM_BG, signUpCustomBg);
 };

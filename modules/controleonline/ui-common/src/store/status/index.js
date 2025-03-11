@@ -6,6 +6,8 @@ import mutations from "@controleonline/ui-default/src/store/default/mutations";
 export default {
   namespaced: true,
   state: {
+ item:{},
+items:[],
     resourceEndpoint: "statuses",
     isLoading: false,
     error: "",
@@ -26,7 +28,7 @@ export default {
         },
       },
       {
-        externalFilter: true,
+        externalFilter: false,
         sortable: true,
         name: "status",
         align: "left",
@@ -41,6 +43,7 @@ export default {
         name: "color",
         align: "left",
         label: "color",
+        inputType: "color",
         format: function (value) {
           return value;
         },

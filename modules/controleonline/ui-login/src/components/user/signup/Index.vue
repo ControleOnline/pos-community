@@ -1,99 +1,110 @@
 <template>
-  <div :class="'signup-page' + (background() !== null ? '' : ' ')" :style="style()">
-    <div class="signup-container">
-      <div class="text-right full-width">
-        <h5 class="signup-app-name">{{ $t("app.name") }}</h5>
+  <q-form @submit="save" ref="myForm">
+    <div class="row q-col-gutter-xs q-pb-xs">
+      <div class="col-xs-12">
+        <label class="q-input-label">{{ $tt("login", "label", "name") }}</label>
+        <q-input
+          dense
+          outlined
+          stack-label
+          lazy-rules
+          v-model="item.name"
+          type="text"
+          :placeholder="$tt('login', 'label', 'enterYourName')"
+          :rules="[isInvalid('name')]"
+        />
       </div>
-
-      <q-card class="signup-page-card">
-        <q-card-section>
-          <div class="text-h6">
-            <h4 class="signup-label">{{ $t("Crie sua conta") }}</h4>
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-stepper v-if="userFields.length > 0 && companyFields.length > 0" animated alternative-labels header-nav flat
-            v-model="current" ref="stepper" color="primary" :vertical="$q.screen.lt.sm">
-            <q-step :header-nav="false" name="create_user" title="Informe seus dados de usuário" icon="face"
-              :done="steps.create_user.hasErrors === false" :error="steps.create_user.hasErrors === true">
-              <UserForm ref="userForm" :userFields="userFields" :contact="order.contact" @saved="goToNext" />
-            </q-step>
-
-            <q-step :header-nav="false" name="create_company" title="Cadastre seus dados comerciais" icon="business"
-              :done="steps.create_company.hasErrors === false" :error="steps.create_company.hasErrors === true">
-              <CompanyForm ref="companyForm" :companyFields="companyFields" :origin="order.address.origin"
-                @saved="goToNext" />
-            </q-step>
-          </q-stepper>
-
-          <UserForm v-else-if="userFields.length > 0" ref="userForm" :userFields="userFields" :contact="order.contact"
-            @saved="goToNext" />
-
-          <CompanyForm v-else-if="companyFields.length > 0" ref="companyForm" :companyFields="companyFields"
-            :origin="order.address.origin" @saved="goToNext" />
-        </q-card-section>
-
-        <label class="signin-link-label" v-if="$t('login.signinLabel') !== 'login.signinLabel'">
-          {{ $t("login.signinLabel") }}
-        </label>
-        <q-card-actions align="left" class="q-pa-md">
-          <a href="#" class="signin-link" @click="onSignIn">
-            {{ $t("login.signin") }}
-          </a>
-        </q-card-actions>
-      </q-card>
     </div>
-  </div>
+
+    <div class="row q-col-gutter-xs q-pb-xs">
+      <div class="col-xs-12">
+        <label class="q-input-label">{{
+          $tt("login", "label", "email")
+        }}</label>
+        <q-input
+          dense
+          outlined
+          stack-label
+          lazy-rules
+          v-model="item.email"
+          type="text"
+          :placeholder="$tt('login', 'label', 'enterYourEmail')"
+          class="q-mb-md"
+          :rules="[isInvalid('email')]"
+        />
+      </div>
+      <div class="col-xs-12">
+        <label class="q-input-label">{{
+          $tt("login", "label", "confirmEmail")
+        }}</label>
+        <q-input
+          dense
+          outlined
+          stack-label
+          lazy-rules
+          v-model="item.confirmEmail"
+          type="text"
+          :placeholder="$tt('login', 'label', 'enterYourEmail')"
+          class="q-mb-md"
+          :rules="[isInvalid('confirmEmail')]"
+        />
+      </div>
+    </div>
+
+    <div class="row q-col-gutter-xs q-pb-xs">
+      <div class="col-xs-12">
+        <label class="q-input-label">{{
+          $tt("login", "label", "password")
+        }}</label>
+        <q-input
+          dense
+          outlined
+          stack-label
+          lazy-rules
+          v-model="item.password"
+          type="password"
+          :placeholder="$tt('login', 'label', 'enterYourPass')"
+          :rules="[isInvalid('password')]"
+          :hint="$tt('login', 'label', 'passMessage')"
+        />
+      </div>
+      <div class="col-xs-12">
+        <label class="q-input-label">{{
+          $tt("login", "label", "confirm")
+        }}</label>
+        <q-input
+          dense
+          outlined
+          stack-label
+          lazy-rules
+          v-model="item.confirmPassword"
+          type="password"
+          :placeholder="$tt('login', 'label', 'confirmYourPass')"
+          :rules="[isInvalid('confirm')]"
+        />
+      </div>
+    </div>
+
+    <div class="row justify-end">
+      <q-btn
+        type="submit"
+        color="primary"
+        :label="$tt('login', 'label', 'continue')"
+        :loading="isLoading"
+        class="q-mt-md signup-submit-button"
+      />
+    </div>
+  </q-form>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import CompanyForm from "./Company";
-import UserForm from "./User";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-  components: {
-    UserForm,
-    CompanyForm,
-  },
-
-  props: {
-    signUpFields: {
-      type: Object,
-      required: true,
-    },
-
-    order: {
-      type: Object,
-      required: false,
-      default: () => {
-        return {
-          address: {
-            origin: {
-              country: "",
-              state: "",
-              city: "",
-              district: "",
-              address: "",
-              postalCode: "",
-              street: "",
-              number: "",
-              complement: "",
-            },
-          },
-          contact: {
-            name: "",
-            email: "",
-            phone: "",
-          },
-        };
-      },
-    },
-  },
+  components: {},
 
   created() {
-    if (this.isLogged() && this.logged.company === null) {
+    if (this.$auth.isLogged() && this.$auth.user.company === null) {
       this.current = "create_company";
     }
   },
@@ -102,31 +113,23 @@ export default {
     ...mapGetters({
       newUser: "auth/created",
       newCompany: "people/company",
-      signUpCustomBg: "auth/signUpCustomBg",
       defaultCompany: "people/defaultCompany",
-
+      isLoading: "auth/isLoading",
+      error: "auth/error",
+      violations: "auth/violations",
+      created: "auth/created",
     }),
-
-
-
-    logged() {
-      return this.$store.getters["auth/user"];
-    },
-
-    userFields() {
-      return this.signUpFields?.username || [];
-    },
-
-    companyFields() {
-      return this.signUpFields?.company || [];
-    },
   },
 
   watch: {
     newUser(user) {
-      if (user && user.token) this.$emit("created", user);
+      if (user && user.api_key) this.$emit("created", user);
     },
-
+    created(newUser) {
+      if (newUser && newUser.api_key) {
+        this.$emit("saved", false);
+      }
+    },
     newCompany(company) {
       if (company && company.id) this.$emit("company", company);
     },
@@ -134,25 +137,87 @@ export default {
 
   data() {
     return {
-      current: "create_user",
-      steps: {
-        create_user: {
-          hasErrors: null,
-        },
-        create_company: {
-          hasErrors: null,
-        },
+      item: {
+        name: null,
+        email: null,
+        confirmEmail: "",
+        password: null,
+        confirmPassword: null,
       },
     };
   },
 
   methods: {
-    isLogged() {
-      return (
-        this.$store.getters["auth/user"] !== null &&
-        this.$store.getters["auth/user"].username
-      );
+    ...mapActions({
+      signup: "auth/signUp",
+    }),
+
+    save() {
+      this.signup({
+        name: this.item.name,
+        email: this.item.email,
+        password: this.item.password,
+        confirmPassword: this.item.confirmPassword,
+      })
+        .then((response) => {
+          let formHasErrors = !(response && response.success === true);
+
+          if (formHasErrors) this.notifyError(response.error);
+
+          if (response.data) this.$emit("logged", response.data);
+        })
+        .catch((error) => {
+          let formHasErrors = true;
+
+          this.$emit("saved", formHasErrors);
+
+          this.notifyError(error.message);
+        });
     },
+
+    notifyError(message) {
+      if (
+        /password: This password has been leaked in a data breach/gi.test(
+          message
+        )
+      )
+        message = this.$tt("login", "label", "weakPass");
+      else if (/This account already exists/gi.test(message))
+        message = this.$tt("login", "label", "duplicateEmail");
+      else if (/This user already exists/gi.test(message))
+        message = this.$tt("login", "label", "duplicateUser");
+
+      this.$q.notify({
+        message: message,
+        position: "bottom",
+        type: "negative",
+      });
+    },
+
+    isInvalid(key) {
+      return (val) => {
+        if (!(val && val.length > 0))
+          return this.$tt("login", "label", "fieldRequired");
+
+        if (key == "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+          return this.$tt("login", "label", "emailInvalid");
+
+        if (key == "phone" && !/^\d{10,11}$/.test(val))
+          return this.$tt("login", "label", "phoneInvalid");
+
+        if (key == "password" && val.length < 6)
+          return this.$tt("login", "label", "passMessage");
+
+        if (key == "confirmEmail" && this.item.email != this.item.confirmEmail)
+          return this.$tt("login", "label", "passNoMatch");
+
+        if (key == "confirm" && this.item.password != this.item.confirmPassword)
+          return this.$tt("login", "label", "passNoMatch");
+
+        return true;
+      };
+    },
+
     goToNext(formHasErrors) {
       this.steps[this.current].hasErrors = formHasErrors;
 
@@ -186,16 +251,11 @@ export default {
     },
 
     background() {
-      if (this.signUpCustomBg === true) {
-        return '//' + this.defaultCompany.theme.background.domain + this.defaultCompany.theme.background.url
-      } else if (typeof this.signUpCustomBg === "string") {
-        return this.signUpCustomBg;
-      }
-      return null;
-    },
-
-    onSignIn() {
-      this.$emit("signIn");
+      return (
+        "//" +
+        this.defaultCompany.theme.background.domain +
+        this.defaultCompany.theme.background.url
+      );
     },
   },
 };

@@ -1,12 +1,18 @@
 <template>
   <div class="row col-2" v-if="googleClientId">
-    <q-btn round @click="loginWithGoogle" color="white" unelevated :loading="isLoading">
+    <q-btn
+      round
+      @click="loginWithGoogle"
+      color="white"
+      unelevated
+      :loading="isLoading"
+    >
       <q-avatar size="42px">
-        <img v-if="isLoading" src="../../../assets/oauth/google/loading.webp">
-        <img v-else src="../../../assets/oauth/google/logo.svg">
+        <img v-if="isLoading" src="../../assets/oauth/google/loading.webp" />
+        <img v-else src="../../assets/oauth/google/logo.svg" />
       </q-avatar>
       <q-tooltip>
-        {{ $t('login.with_google') }}
+        {{ tt("login", "message", "with_google") }}
       </q-tooltip>
     </q-btn>
   </div>
@@ -42,11 +48,8 @@ export default {
         const reloadResponse = await googleUser.reloadAuthResponse();
 
         this.gSignIn({ access_token: reloadResponse.access_token })
-          .then(data => {
-            
-          }).catch(e => {
-          });
-
+          .then((data) => {})
+          .catch((e) => {});
       } catch (error) {
         // Error occurred during sign-in
         console.error(error);
@@ -54,14 +57,17 @@ export default {
     },
     async initGoogleAuth() {
       return new Promise((resolve, reject) => {
-        gapi.load('auth2', () => {
-          gapi.auth2.init({
-            client_id: this.googleClientId,
-          }).then(() => {
-            resolve(); // Resolve the promise once gapi.auth2 is initialized
-          }).catch(error => {
-            reject(error); // Reject the promise if initialization fails
-          });
+        gapi.load("auth2", () => {
+          gapi.auth2
+            .init({
+              client_id: this.googleClientId,
+            })
+            .then(() => {
+              resolve(); // Resolve the promise once gapi.auth2 is initialized
+            })
+            .catch((error) => {
+              reject(error); // Reject the promise if initialization fails
+            });
         });
       });
     },

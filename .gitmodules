@@ -4,3 +4,12 @@
 [submodule "modules/controleonline/ui-login"]
 	path = modules/controleonline/ui-login
 	url = https://github.com/ControleOnline/ui-login.git
+[submodule "modules/controleonline/ui-orders"]
+	path = modules/controleonline/ui-orders
+	url = https://github.com/ControleOnline/ui-orders.git
+[submodule "modules/controleonline/ui-shop"]
+	path = modules/controleonline/ui-shop
+	url = https://github.com/ControleOnline/ui-shop.git
+[submodule "modules/controleonline/ui-default"]
+	path = modules/controleonline/ui-default
+	url = https://github.com/ControleOnline/ui-default.git

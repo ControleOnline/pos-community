@@ -7,7 +7,7 @@ export default {
   state: {
  item:{},
 items:[],
-    resourceEndpoint: "extra_fields",
+    resourceEndpoint: "imports",
     isLoading: false,
     error: "",
     violations: null,
@@ -29,9 +29,9 @@ items:[],
       {
         externalFilter: false,
         sortable: true,
-        name: "name",
+        name: "field_name",
         align: "left",
-        label: "name",
+        label: "field_name",
         sum: false,
         format: function (value) {
           return value;
@@ -40,9 +40,9 @@ items:[],
       {
         externalFilter: false,
         sortable: true,
-        name: "type",
+        name: "field_type",
         align: "left",
-        label: "type",
+        label: "field_type",
         sum: false,
         list: [
           { value: "text", label: "text" },
@@ -70,9 +70,9 @@ items:[],
       {
         externalFilter: false,
         sortable: true,
-        name: "configs",
+        name: "field_configs",
         align: "left",
-        label: "configs",
+        label: "field_configs",
         sum: false,
         format: function (value) {
           return value;

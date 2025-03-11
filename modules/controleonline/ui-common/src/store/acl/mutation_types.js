@@ -1,0 +1,4 @@
+export const SET_ISLOADING = "SET_ISLOADING";
+export const SET_PERMISSIONS = "SET_PERMISSIONS";
+export const SET_DISABLED = "SET_DISABLED";
+export const SET_ISADMIN = "SET_ISADMIN";

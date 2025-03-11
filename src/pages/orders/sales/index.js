@@ -9,58 +9,21 @@ import {
   SafeAreaView,
 } from 'react-native';
 import globalStyles from '../../../styles/global';
+import ordersStore from '@controleonline/ui-orders/src/store/orders/react';
 
 const Orders = ({navigation}) => {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  console.log(ordersStore);
+  const {state, actions, commit} = ordersStore;
+  const {items, isLoading, error, columns} = state;
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        api
-          .fetch('/orders', {
-            page: 1,
-            itemsPerPage: 50,
-            provider: '/people/8',
-            'status[0]': 6,
-          })
-          .then(response => {
-            setOrders(
-              response['hydra:member'].map(order => ({
-                ...order,
-                orderDate: new Date(order.orderDate).toLocaleDateString(
-                  'pt-BR',
-                ),
-                status: translateStatus(order.status.status),
-                totalPrice: formatPrice(order.price),
-              })),
-            );
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } catch (error) {
-        console.error('Erro ao buscar pedidos:', error);
-        setLoading(false);
-      }
-    };
-    fetchOrders();
+    actions.getItems({
+      page: 1,
+      itemsPerPage: 50,
+      provider: '/people/8',
+      status: [6],
+    });
   }, []);
-
-  const translateStatus = status => {
-    const statusMap = {
-      'waiting payment': 'Aguardando pagamento',
-    };
-
-    return statusMap[status] || status;
-  };
-
-  const formatPrice = price => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(price);
-  };
 
   const handlePay = orderId => {
     navigation.navigate('Checkout', {orderId: orderId});
@@ -70,7 +33,7 @@ const Orders = ({navigation}) => {
     navigation.navigate('OrderDetails', {orderId: orderId});
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={globalStyles.loadingContainer}>
         <ActivityIndicator size="large" color="#3FB8AF" />
@@ -82,7 +45,7 @@ const Orders = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View>
-          {orders.map(order => (
+          {items.map(order => (
             <View
               key={order.id}
               activeOpacity={0.6}

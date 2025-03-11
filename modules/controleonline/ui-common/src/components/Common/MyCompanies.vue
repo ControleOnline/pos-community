@@ -1,15 +1,29 @@
 <template>
   <!-- eslint-disable -->
   <div>
-    <q-btn-dropdown split outline v-if="isMultipleCompanies() == true && !dialog /*&& !this.$q.screen.gt.sm*/"
-      :label="myCompany !== null ? myCompany.name : 'Loading...'"
-      class="ellipsis full-width company-swich">
+    <q-btn-dropdown
+      split
+      outline
+      v-if="
+        isMultipleCompanies() == true && !dialog /*&& !this.$q.screen.gt.sm*/
+      "
+      :label="myCompany  ? myCompany?.alias : 'Loading...'"
+      :class="(expanded ? '' : 'company-swich') + ' ellipsis full-width'"
+    >
       <q-list>
-        <q-item clickable v-close-popup dense v-for="(company, index) in myCompanies" :disable="company.enabled && company.user.employee_enabled ? false : true
-          " :key="index" @click="onCompanySelection(company)">
+        <q-item
+          clickable
+          v-close-popup
+          dense
+          v-for="(company, index) in myCompanies"
+          :disable="
+            company.enabled && company.user.employee_enabled ? false : true
+          "
+          :key="index"
+          @click="onCompanySelection(company)"
+        >
           <q-item-section>
-            <q-item-label lines="1">
-              {{ company.alias }}</q-item-label>
+            <q-item-label lines="1"> {{ company?.alias }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-list>
@@ -22,7 +36,13 @@
           <q-space />
         </q-card-section>
         <q-card-section>
-          <FormCompany @saved="onSaved" :person="false" :companyFields="companyFields" address="bycep" saveBtn="Salvar" />
+          <FormCompany
+            @saved="onSaved"
+            :person="false"
+            :companyFields="companyFields"
+            address="bycep"
+            saveBtn="Salvar"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -31,7 +51,7 @@
 
 <script>
 /* eslint-disable */
-import FormCompany from "@controleonline/ui-legacy/ui-login/src/components/user/signup/Company";
+import FormCompany from "./Company.vue";
 import { mapActions, mapGetters } from "vuex";
 import { LocalStorage } from "quasar";
 
@@ -40,13 +60,16 @@ export default {
     FormCompany,
   },
   props: {
-
+    expanded: {
+      requed: false,
+      default: false,
+    },
   },
 
   data() {
     return {
       dialog: false,
-      myCompanies: []
+      myCompanies: [],
     };
   },
 
@@ -89,7 +112,9 @@ export default {
       return this.companies.length > 1 ? true : false;
     },
     setCompanies(companies) {
-      let session = LocalStorage.has("session") ? LocalStorage.getItem("session") : {};
+      let session = LocalStorage.has("session")
+        ? LocalStorage.getItem("session")
+        : {};
       let selected = session.mycompany;
       let currentCompany;
 
@@ -97,12 +122,13 @@ export default {
       for (let index in companies) {
         let item = companies[index];
         this.myCompanies.push(item);
-        if (item.enabled && !selected)
-          selected = item;
+        if (item.enabled && !selected) selected = item;
       }
 
       if (selected != -1) {
-        currentCompany = this.companies.find((companies) => companies.id === selected);
+        currentCompany = this.companies.find(
+          (companies) => companies.id === selected
+        );
       } else currentCompany = selected;
 
       if (currentCompany) {
@@ -110,10 +136,11 @@ export default {
       }
     },
 
-
     onCompanySelection(company) {
       this.setCompany(company);
-      let session = LocalStorage.has("session") ? LocalStorage.getItem("session") : {};
+      let session = LocalStorage.has("session")
+        ? LocalStorage.getItem("session")
+        : {};
       session.mycompany = company.id;
       LocalStorage.set("session", session);
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <div class="text-body2">{{ $t('login.rememberDesc' ) }}</div>
+    <div class="text-body2">{{ $tt('login', 'label', 'rememberDesc' ) }}</div>
 
     <q-form @submit="onSubmit" class="q-mt-md">
 
@@ -10,7 +10,7 @@
         ref    ="email"
         v-model="item.username"
         type   ="text"
-        :label ="$t('login.yourUsername')"
+        :label ="$tt('login', 'label', 'yourUsername')"
         class  ="q-mt-md"
         :rules ="[isInvalid('username')]"
       />
@@ -21,14 +21,14 @@
         ref    ="email"
         v-model="item.email"
         type   ="email"
-        :label ="$t('login.yourEmail')"
+        :label ="$$tt('login', 'label', 'yourEmail')"
         class  ="q-mt-md"
         :rules ="[isInvalid('email')]"
       />
 
       <q-btn
         type    ="submit"
-        :label  ="$t('login.send')"
+        :label  ="$tt('login', 'label', 'send')"
         size    ="lg"
         color   ="primary"
         class   ="full-width q-mt-md"
@@ -100,9 +100,9 @@ export default {
       return val => {
 
         if (!(val && val.length > 0))
-          return this.$t('messages.fieldRequired');
+          return this.$tt('login', 'label', 'fieldRequired');
         if (key == 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
-          return this.$t('messages.emailInvalid');
+          return this.$tt('login', 'label', 'emailInvalid');
 
         return true;
       };

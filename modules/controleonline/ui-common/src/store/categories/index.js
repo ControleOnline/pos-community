@@ -5,6 +5,9 @@ import mutations from "@controleonline/ui-default/src/store/default/mutations";
 export default {
   namespaced: true,
   state: {
+    item: {},
+    items: [],
+    filters: {},
     resourceEndpoint: "categories",
     isLoading: false,
     error: "",
@@ -25,7 +28,7 @@ export default {
         },
       },
       {
-        externalFilter: true,
+        externalFilter: false,
         sortable: true,
         name: "name",
         align: "left",
@@ -40,6 +43,7 @@ export default {
         name: "color",
         align: "left",
         label: "color",
+        inputType: "color",
         format: function (value) {
           return value;
         },
@@ -49,12 +53,22 @@ export default {
         name: "icon",
         align: "left",
         label: "icon",
+        inputType: "icon",
         format: function (value) {
           return value;
         },
       },
       {
-        externalFilter: true,
+        sortable: true,
+        name: "categoryFiles",
+        align: "left",
+        label: "categoryFiles",
+        format: function (value) {
+          return value;
+        },
+      },
+      {
+        externalFilter: false,
         sortable: true,
         name: "parent",
         align: "left",
@@ -67,14 +81,7 @@ export default {
         saveFormat: function (value) {
           return value ? "/categories/" + (value.value || value) : null;
         },
-        formatList: function (value) {
-          return value
-            ? {
-                label: value?.name,
-                value: value?.id,
-              }
-            : null;
-        },
+
       },
     ],
   },
