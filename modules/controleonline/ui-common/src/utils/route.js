@@ -1,4 +1,3 @@
-import { LocalStorage } from "quasar";
 import { route } from "quasar/wrappers";
 import {
   createRouter,
@@ -18,10 +17,6 @@ export default route(function ({ store, ssrContext }) {
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
     routes,
-
-    // Leave this as is and make changes in quasar.conf.js instead!
-    // quasar.conf.js -> build -> vueRouterMode
-    // quasar.conf.js -> build -> publicPath
     history: createHistory(
       process.env.MODE === "ssr" ? void 0 : process.env.VUE_ROUTER_BASE
     ),
@@ -35,17 +30,14 @@ export default route(function ({ store, ssrContext }) {
       store.commit("auth/LOGIN_SET_IS_LOGGED_IN", true);
       return true;
     }
-    // clean storage from not allowed keys
 
-    let keys = LocalStorage.getAllKeys();
+    let keys = Object.keys(localStorage);
     for (let index = 0; index < keys.length; index++) {
-      if (keys[index] != "session") LocalStorage.remove(keys[index]);
+      if (keys[index] != "session") localStorage.removeItem(keys[index]);
     }
 
-    if (LocalStorage.has("session")) {
-      let session = LocalStorage.getItem("session");
-
-      // in case app version changes clear LocalStorage
+    if (localStorage.getItem("session")) {
+      let session = JSON.parse(localStorage.getItem("session"));
 
       if (session.user != undefined) {
         store.dispatch("auth/logIn", session);
@@ -60,17 +52,13 @@ export default route(function ({ store, ssrContext }) {
     const isLoginPage = from.name == "LoginIndex";
     const isLogged = autoLogin();
 
-    //If dont have route, go to home
     if (to.name == undefined) return next({ name: "HomeIndex" });
 
-    //If is login page, and is logged and have a redirect on URL
     if (isLoginPage && isLogged && to.query.redirect) next(to.query.redirect);
 
-    //If is not a public page and is not logged in
     if (!to.meta?.isPublic && !isLogged && !isLoginPage)
       return next({ name: "LoginIndex", query: { redirect: to.fullPath } });
 
-    //If is a login page and is not logged in
     if (!isLogged && isLoginPage) return next(false);
 
     return next();

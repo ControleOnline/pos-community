@@ -1,13 +1,12 @@
-import { LocalStorage } from "quasar";
-import * as types from "./mutation_types";
+import * as types from './mutation_types';
 
 export default {
   [types.LOGIN_SET_USER](state, user) {
     if (!user) {
-      LocalStorage.clear();
+      localStorage.clear();
       state.isLoggedIn = false;
     } else {
-      LocalStorage.set("session", user);
+      localStorage.setItem('session', JSON.stringify(user));
       state.isLoggedIn = true;
     }
     state.user = user || {};
@@ -19,7 +18,7 @@ export default {
   },
 
   [types.LOGIN_SET_ERROR](state, error) {
-    state.error = error || "";
+    state.error = error || '';
   },
 
   [types.LOGIN_SET_ISLOADING](state, isLoading = true) {
@@ -31,7 +30,7 @@ export default {
   },
 
   [types.LOGIN_SET_INDEX_ROUTE](state, indexRoute) {
-    state.indexRoute = indexRoute || "HomeIndex";
+    state.indexRoute = indexRoute || 'HomeIndex';
   },
   [types.LOGIN_SET_IS_LOGGED_IN](state, isLoggedIn) {
     state.isLoggedIn = isLoggedIn || false;

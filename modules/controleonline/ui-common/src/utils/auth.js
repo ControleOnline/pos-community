@@ -1,7 +1,4 @@
-import { LocalStorage } from "quasar";
-
 export default class Auth {
-
   constructor(store, router) {
     this.store = store;
     this.router = router;
@@ -13,7 +10,7 @@ export default class Auth {
     if (!noReload) location.reload();
   }
   persist(user) {
-    LocalStorage.set("session", user);
+    localStorage.setItem("session", JSON.stringify(user));
     this.store.commit("auth/LOGIN_SET_USER", user);
     this.user = user;
   }

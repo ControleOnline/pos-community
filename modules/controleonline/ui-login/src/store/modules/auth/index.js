@@ -1,18 +1,17 @@
-import { LocalStorage } from "quasar";
-import * as actions from "./actions";
-import * as getters from "./getters";
-import mutations from "./mutations";
+import * as actions from './actions';
+import * as getters from './getters';
+import mutations from './mutations';
 
 export default {
   namespaced: true,
   state: {
-    user: LocalStorage.getItem("session") || {},
+    user: JSON.parse(localStorage.getItem('session')) || {},
     isLoading: false,
     isLoggedIn: false,
-    error: "",
+    error: '',
     violations: null,
     created: null,
-    indexRoute: "HomeIndex",
+    indexRoute: 'HomeIndex',
   },
   actions,
   getters,

@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable -->
   <div>
     <q-btn-dropdown
       split
@@ -50,10 +49,8 @@
 </template>
 
 <script>
-/* eslint-disable */
 import FormCompany from "./Company.vue";
 import { mapActions, mapGetters } from "vuex";
-import { LocalStorage } from "quasar";
 
 export default {
   components: {
@@ -104,7 +101,6 @@ export default {
 
     onSaved(hasErrors) {
       if (hasErrors == false) {
-        //this.dialog = false;
         location.reload();
       }
     },
@@ -112,8 +108,8 @@ export default {
       return this.companies.length > 1 ? true : false;
     },
     setCompanies(companies) {
-      let session = LocalStorage.has("session")
-        ? LocalStorage.getItem("session")
+      let session = localStorage.getItem("session")
+        ? JSON.parse(localStorage.getItem("session"))
         : {};
       let selected = session.mycompany;
       let currentCompany;
@@ -138,11 +134,11 @@ export default {
 
     onCompanySelection(company) {
       this.setCompany(company);
-      let session = LocalStorage.has("session")
-        ? LocalStorage.getItem("session")
+      let session = localStorage.getItem("session")
+        ? JSON.parse(localStorage.getItem("session"))
         : {};
       session.mycompany = company.id;
-      LocalStorage.set("session", session);
+      localStorage.setItem("session", JSON.stringify(session));
     },
   },
 };

@@ -1,7 +1,5 @@
 import { api } from "@controleonline/ui-common/src/api";
 
-import { LocalStorage } from "quasar";
-
 export default class Acl {
   constructor(store, router) {
     this.store = store;
@@ -13,12 +11,12 @@ export default class Acl {
   }
 
   getPermissions() {
-    let storedUser = LocalStorage.getItem("session") || {};
+    let storedUser = JSON.parse(localStorage.getItem("session")) || {};
     return storedUser.actions ? storedUser.actions[this.router.name] : {};
   }
 
   fetchPermission() {
-    let storedUser = LocalStorage.getItem("session");
+    let storedUser = JSON.parse(localStorage.getItem("session"));
     let route = storedUser.route;
     if (!storedUser.actions) storedUser.actions = {};
 
@@ -31,7 +29,7 @@ export default class Acl {
           storedUser.actions[route] = result.response
             ? result.response.data
             : {};
-          LocalStorage.set("session", storedUser);
+          localStorage.setItem("session", JSON.stringify(storedUser));
         });
   }
 

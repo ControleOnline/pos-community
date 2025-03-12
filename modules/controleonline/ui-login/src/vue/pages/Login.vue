@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import { LocalStorage } from "quasar";
 import { mapActions, mapGetters } from "vuex";
 import LoginPage from "../components/user/login";
 import SignUpPage from "../components/user/signup";
@@ -110,8 +109,6 @@ export default {
       this.$router.push({ name: "HomeIndex" });
     },
 
-    // when user logged is succeeded
-
     onLogged(user) {
       if (this.$auth.isLogged) {
         if (this.$route.query.redirect) {
@@ -122,18 +119,14 @@ export default {
       }
     },
 
-    // when company created signup step 2
-
     onCompany(company) {
-      // refresh company id if not defined
-
-      if (LocalStorage.has("session")) {
-        let storedUser = LocalStorage.getItem("session");
+      if (localStorage.getItem("session")) {
+        let storedUser = JSON.parse(localStorage.getItem("session"));
 
         if (!storedUser.company) {
           storedUser.company = company.id;
 
-          LocalStorage.set("session", storedUser);
+          localStorage.setItem("session", JSON.stringify(storedUser));
         }
       }
     },

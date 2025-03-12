@@ -1,19 +1,18 @@
-import { api } from "@controleonline/ui-common/src/api";
-import * as types from "./mutation_types";
-import { LocalStorage } from "quasar";
+import {api} from '@controleonline/ui-common/src/api';
+import * as types from './mutation_types';
 
-export const signIn = ({ commit }, values) => {
-  commit(types.LOGIN_SET_ERROR, "");
+export const signIn = ({commit}, values) => {
+  commit(types.LOGIN_SET_ERROR, '');
   commit(types.LOGIN_SET_ISLOADING);
 
   return api
-    .fetch("token", { method: "POST", body: values })
-    .then((data) => {
+    .fetch('token', {method: 'POST', body: values})
+    .then(data => {
       commit(types.LOGIN_SET_USER, data);
       commit(types.LOGIN_SET_IS_LOGGED_IN, true);
       return data;
     })
-    .catch((e) => {
+    .catch(e => {
       commit(types.LOGIN_SET_ERROR, e.message);
       throw e;
     })
@@ -22,28 +21,28 @@ export const signIn = ({ commit }, values) => {
     });
 };
 
-export const getUserStatus = ({ commit }, values) => {
-  if (!LocalStorage.has("session")) return;
+export const getUserStatus = ({commit}, values) => {
+  if (!localStorage.getItem('session')) return;
 
-  let session = LocalStorage.getItem("session");
+  let session = JSON.parse(localStorage.getItem('session'));
 
-  api.fetch(`people/${session.people}/status`, {}).then((response) => {
-    commit("SET_PEOPLE_STATUS", response.response.data);
+  api.fetch(`people/${session.people}/status`, {}).then(response => {
+    commit('SET_PEOPLE_STATUS', response.response.data);
   });
 };
 
-export const gSignIn = ({ commit }, values) => {
-  commit(types.LOGIN_SET_ERROR, "");
+export const gSignIn = ({commit}, values) => {
+  commit(types.LOGIN_SET_ERROR, '');
   commit(types.LOGIN_SET_ISLOADING, true);
 
   return api
-    .fetch("oauth/google/return", { method: "POST", params: values })
-    .then((response) => {
+    .fetch('oauth/google/return', {method: 'POST', params: values})
+    .then(response => {
       commit(types.LOGIN_SET_USER, response.response.data);
       commit(types.LOGIN_SET_IS_LOGGED_IN, true);
       return response;
     })
-    .catch((e) => {
+    .catch(e => {
       commit(types.LOGIN_SET_ERROR, e.message);
       throw e;
     })
@@ -52,25 +51,23 @@ export const gSignIn = ({ commit }, values) => {
     });
 };
 
-export const signUp = ({ commit }, values) => {
-  commit(types.LOGIN_SET_ERROR, "");
+export const signUp = ({commit}, values) => {
+  commit(types.LOGIN_SET_ERROR, '');
   commit(types.LOGIN_SET_ISLOADING);
 
   return api
-    .fetch("users/create-account", { method: "POST", body: values })
-    .then((response) => {
+    .fetch('users/create-account', {method: 'POST', body: values})
+    .then(response => {
       commit(types.LOGIN_SET_ISLOADING, false);
-
       return response;
     })
-    .then((data) => {
+    .then(data => {
       if (data.response) {
         if (data.response.success === true)
           commit(types.LOGIN_SET_USER, data.response.data);
         commit(types.LOGIN_SET_IS_LOGGED_IN, true);
         return data.response;
       }
-
       return null;
     })
     .finally(() => {
@@ -78,20 +75,17 @@ export const signUp = ({ commit }, values) => {
     });
 };
 
-/*
- * Do login with just created user
- */
-export const logIn = ({ commit, state }, user = null) => {
+export const logIn = ({commit, state}, user = null) => {
   commit(types.LOGIN_SET_USER, user);
   commit(types.LOGIN_SET_IS_LOGGED_IN, true);
 };
 
-export const logOut = ({ commit }) => {
+export const logOut = ({commit}) => {
   commit(types.LOGIN_SET_USER, null);
   commit(types.LOGIN_SET_IS_LOGGED_IN, false);
-  LocalStorage.clear();
+  localStorage.clear();
 };
 
-export const setIndexRoute = ({ commit }, indexRoute) => {
+export const setIndexRoute = ({commit}, indexRoute) => {
   commit(types.LOGIN_SET_INDEX_ROUTE, indexRoute);
 };
