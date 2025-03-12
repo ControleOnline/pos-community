@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import stores from './stores';
 
-export const useStore = store => {
+export function getStore(store) {
   const storeModule = stores[store];
 
   const [state, setState] = useState(storeModule.state);
@@ -23,4 +23,4 @@ export const useStore = store => {
     getters,
     actions,
   };
-};
+}

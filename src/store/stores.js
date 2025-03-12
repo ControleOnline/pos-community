@@ -16,7 +16,7 @@ import product_group from '@controleonline/ui-products/src/store/products/produc
 import product_group_product from '@controleonline/ui-products/src/store/products/product_group_product';
 import product_group_feedstock from '@controleonline/ui-products/src/store/products/product_group_feedstock';
 
-export const stores = {
+export default {
   acl,
   auth,
   cart,
