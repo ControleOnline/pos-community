@@ -10,3 +10,9 @@
 [submodule "modules/controleonline/ui-products"]
 	path = modules/controleonline/ui-products
 	url = https://github.com/ControleOnline/ui-products.git
+[submodule "modules/controleonline/ui-login"]
+	path = modules/controleonline/ui-login
+	url = https://github.com/ControleOnline/ui-login.git
+[submodule "modules/controleonline/ui-common"]
+	path = modules/controleonline/ui-common
+	url = https://github.com/ControleOnline/ui-common.git
