@@ -1,9 +1,3 @@
-[submodule "modules/controleonline/ui-common"]
-	path = modules/controleonline/ui-common
-	url = https://github.com/ControleOnline/ui-common.git
-[submodule "modules/controleonline/ui-login"]
-	path = modules/controleonline/ui-login
-	url = https://github.com/ControleOnline/ui-login.git
 [submodule "modules/controleonline/ui-orders"]
 	path = modules/controleonline/ui-orders
 	url = https://github.com/ControleOnline/ui-orders.git
