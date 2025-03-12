@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "33.0.0"
+        buildToolsVersion = "33.0.3"
         minSdkVersion = 22
         compileSdkVersion = 33
         targetSdkVersion = 33 // 27 Talvez precisa para a Cielo
