@@ -22,6 +22,7 @@ export default function Routes() {
           name={route.name}
           component={route.component}
           options={route.options}
+          initialParams={route.initialParams}
         />
       ))}
     </Stack.Navigator>
