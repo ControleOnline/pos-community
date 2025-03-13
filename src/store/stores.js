@@ -15,6 +15,7 @@ import product_category from '@controleonline/ui-products/src/store/products/pro
 import product_group from '@controleonline/ui-products/src/store/products/product_group';
 import product_group_product from '@controleonline/ui-products/src/store/products/product_group_product';
 import product_group_feedstock from '@controleonline/ui-products/src/store/products/product_group_feedstock';
+import theme from '@controleonline/ui-layout/src/store/theme';
 
 export default {
   acl,
@@ -34,4 +35,5 @@ export default {
   product_group_feedstock,
   status,
   tt,
+  theme,
 };
