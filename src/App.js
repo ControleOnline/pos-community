@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, View, ActivityIndicator, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
