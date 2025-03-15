@@ -19,3 +19,6 @@
 [submodule "modules/controleonline/ui-layout"]
 	path = modules/controleonline/ui-layout
 	url = https://github.com/ControleOnline/ui-layout.git
+[submodule "modules/controleonline/ui-people"]
+	path = modules/controleonline/ui-people
+	url = https://github.com/ControleOnline/ui-people.git

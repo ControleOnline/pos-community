@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {api} from '@controleonline/ui-common/src/api';
-import {ThemeProvider} from '@controleonline/ui-layout/src/react/components/ThemeProvider';
+import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
 import {StoreProvider} from '@store';
 const createLocalStorageSync = async () => {
   let store = {};
@@ -63,12 +63,12 @@ export default function App() {
 
   return (
     <StoreProvider>
-      <ThemeProvider>
+      <DefaultProvider>
         <NavigationContainer>
           <StatusBar barStyle={'light-content'} backgroundColor={'#1B5587'} />
           <Routes />
         </NavigationContainer>
-      </ThemeProvider>
+      </DefaultProvider>
     </StoreProvider>
   );
 }

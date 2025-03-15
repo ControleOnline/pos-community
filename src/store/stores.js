@@ -16,6 +16,11 @@ import product_group from '@controleonline/ui-products/src/store/products/produc
 import product_group_product from '@controleonline/ui-products/src/store/products/product_group_product';
 import product_group_feedstock from '@controleonline/ui-products/src/store/products/product_group_feedstock';
 import theme from '@controleonline/ui-layout/src/store/theme';
+import address from '@controleonline/ui-people/src/store/address';
+import documents from '@controleonline/ui-people/src/store/documents';
+import phones from '@controleonline/ui-people/src/store/phones';
+import emails from '@controleonline/ui-people/src/store/emails';
+import people from '@controleonline/ui-people/src/store/people';
 
 export default {
   acl,
@@ -36,4 +41,9 @@ export default {
   status,
   tt,
   theme,
+  address,
+  documents,
+  phones,
+  emails,
+  people,
 };
