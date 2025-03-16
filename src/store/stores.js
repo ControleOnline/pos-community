@@ -21,6 +21,10 @@ import documents from '@controleonline/ui-people/src/store/documents';
 import phones from '@controleonline/ui-people/src/store/phones';
 import emails from '@controleonline/ui-people/src/store/emails';
 import people from '@controleonline/ui-people/src/store/people';
+import invoice from '@controleonline/ui-financial/src/store/invoice';
+import paymentType from '@controleonline/ui-financial/src/store/paymentType';
+import wallet from '@controleonline/ui-financial/src/store/wallet';
+import walletPaymentType from '@controleonline/ui-financial/src/store/walletPaymentType';
 
 export default {
   acl,
@@ -46,4 +50,8 @@ export default {
   phones,
   emails,
   people,
+  invoice,
+  paymentType,
+  wallet,
+  walletPaymentType,
 };

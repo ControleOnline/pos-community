@@ -22,3 +22,6 @@
 [submodule "modules/controleonline/ui-people"]
 	path = modules/controleonline/ui-people
 	url = https://github.com/ControleOnline/ui-people.git
+[submodule "modules/controleonline/ui-financial"]
+	path = modules/controleonline/ui-financial
+	url = https://github.com/ControleOnline/ui-financial.git
