@@ -5,15 +5,11 @@ import ordersRoutes from '@controleonline/ui-orders/src/react/router/routes';
 
 const Stack = createNativeStackNavigator();
 
-const allRoutes = [
-  ...loginRoutes,
-  ...shopRoutes,
-  ...ordersRoutes,
-];
+const allRoutes = [...loginRoutes, ...shopRoutes, ...ordersRoutes];
 
 export default function Routes() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator detachInactiveScreens={true}>
       {allRoutes.map((route, index) => (
         <Stack.Screen
           key={index}
