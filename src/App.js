@@ -54,7 +54,8 @@ const createLocalStorageSync = async () => {
 
 export default function App() {
   const [storageReady, setStorageReady] = useState(false);
-
+  const [navigationReady, setNavigationReady] = useState(false);
+  
   useEffect(() => {
     createLocalStorageSync().then(localStorageSync => {
       window.localStorage = localStorageSync;
@@ -74,9 +75,9 @@ export default function App() {
   return (
     <StoreProvider>
       <DefaultProvider>
-        <NavigationContainer>
-          <CheckLogin />
+        <NavigationContainer onReady={() => setNavigationReady(true)}>
           <StatusBar barStyle={'light-content'} backgroundColor={'#1B5587'} />
+          {navigationReady && <CheckLogin />}
           <Routes />
         </NavigationContainer>
       </DefaultProvider>
