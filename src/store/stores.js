@@ -1,6 +1,7 @@
 import acl from '@controleonline/ui-common/src/store/acl';
 import categories from '@controleonline/ui-common/src/store/categories';
 import city from '@controleonline/ui-common/src/store/address/city';
+import configs from '@controleonline/ui-common/src/store/configs';
 import file from '@controleonline/ui-common/src/store/file';
 import status from '@controleonline/ui-common/src/store/status';
 import tt from '@controleonline/ui-common/src/store/tt';
@@ -32,6 +33,7 @@ export default {
   cart,
   categories,
   city,
+  configs,
   file,
   orders,
   order_products,
