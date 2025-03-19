@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {api} from '@controleonline/ui-common/src/api';
 import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
 import {StoreProvider} from '@store';
+import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
+
 const createLocalStorageSync = async () => {
   let store = {};
 
@@ -20,7 +22,15 @@ const createLocalStorageSync = async () => {
   }
 
   return {
-    getItem: key => store[key] || {},
+    getItem: key => {
+      let value = store[key];
+      const cleanString =
+        typeof value == 'string' && value.startsWith('__q_objt|')
+          ? value.substring('__q_objt|'.length)
+          : value;
+
+      return cleanString;
+    },
     setItem: (key, value) => {
       store[key] = value;
       AsyncStorage.setItem(key, value).catch(error =>
@@ -65,6 +75,7 @@ export default function App() {
     <StoreProvider>
       <DefaultProvider>
         <NavigationContainer>
+          <CheckLogin />
           <StatusBar barStyle={'light-content'} backgroundColor={'#1B5587'} />
           <Routes />
         </NavigationContainer>
