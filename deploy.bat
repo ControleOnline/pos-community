@@ -2,3 +2,4 @@ npx react-native bundle --platform android --dev false --entry-file index.js --b
 cd android && ./gradlew clean
 cd android && ./gradlew assembleDebug
 cd android && ./gradlew assembleRelease
+cd android && ./gradlew bundleRelease
