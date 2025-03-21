@@ -2,10 +2,16 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import loginRoutes from '@controleonline/ui-login/src/react/router/routes';
 import shopRoutes from '@controleonline/ui-shop/src/react/router/routes';
 import ordersRoutes from '@controleonline/ui-orders/src/react/router/routes';
+import commonRoutes from '@controleonline/ui-common/src/react/router/routes';
 
 const Stack = createNativeStackNavigator();
 
-const allRoutes = [...loginRoutes, ...shopRoutes, ...ordersRoutes];
+const allRoutes = [
+  ...loginRoutes,
+  ...shopRoutes,
+  ...ordersRoutes,
+  ...commonRoutes,
+];
 
 export default function Routes() {
   return (
