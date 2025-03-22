@@ -7,6 +7,7 @@ module.exports = (api) => {
     // Alias de caminho padrão
    //"@controleonline": isProduction      ? "./node_modules/@controleonline"      : "./modules/controleonline",
    "@controleonline": "./modules/controleonline",
+   "@env": "./config/env.local.js",
   };
 
   return {
