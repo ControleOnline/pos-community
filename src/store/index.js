@@ -1,63 +1,83 @@
-import {createContext, useContext, useState} from 'react';
-import stores from './stores'; // Importa o objeto com todos os stores
+import {createContext, useContext, useState, useMemo, useEffect} from 'react';
+import stores from './stores';
 
 const StoreContext = createContext();
 
 export function StoreProvider({children}) {
-  if (!stores) {
+  if (!stores || Object.keys(stores).length === 0) {
+    console.warn('No stores defined.');
     return <>{children}</>;
   }
 
-  const storesState = {};
-
-  Object.keys(stores).forEach(storeName => {
-    const storeModule = stores[storeName];
-
-    if (
-      !storeModule ||
-      !storeModule.state ||
-      !storeModule.mutations ||
-      !storeModule.actions
-    ) {
-      console.warn(
-        `Store "${storeName}" is missing required properties (state, mutations, actions). Skipping.`,
-      );
-      return;
-    }
-
-    const stateHooks = {};
-
-    Object.keys(storeModule.state).forEach(key => {
-      const [state, setState] = useState(storeModule.state[key]);
-      stateHooks[key] = {state, setState};
-    });
-
-    const getters = {};
-    Object.keys(stateHooks).forEach(key => {
-      Object.defineProperty(getters, key, {
-        get: () => stateHooks[key].state,
-        enumerable: true,
-      });
-    });
-
-    const commit = (type, payload) => {
-      const name = storeModule.mutations[type](getters, payload);
-      if (stateHooks[name]) {
-        stateHooks[name].setState(payload);
-      } else {
+  const initialState = useMemo(() => {
+    const state = {};
+    Object.keys(stores).forEach(storeName => {
+      const storeModule = stores[storeName];
+      if (
+        !storeModule ||
+        !storeModule.state ||
+        !storeModule.mutations ||
+        !storeModule.actions
+      ) {
         console.warn(
-          `No state found for mutation key "${name}" in store "${storeName}"`,
+          `Store "${storeName}" is missing required properties. Skipping.`,
         );
+        return;
       }
-    };
-
-    const actions = {};
-    Object.keys(storeModule.actions).forEach(actionName => {
-      actions[actionName] = (...args) =>
-        storeModule.actions[actionName]({commit, getters}, ...args);
+      state[storeName] = {...storeModule.state};
     });
-    storesState[storeName] = {getters, actions};
-  });
+    return state;
+  }, []);
+
+  const [storesStateData, setStoresStateData] = useState(initialState);
+
+  const storesState = useMemo(() => {
+    const result = {};
+
+    Object.keys(stores).forEach(storeName => {
+      const storeModule = stores[storeName];
+      if (
+        !storeModule ||
+        !storeModule.state ||
+        !storeModule.mutations ||
+        !storeModule.actions
+      ) {
+        return;
+      }
+
+      const getters = {...storesStateData[storeName]};
+
+      const commit = (type, payload) => {
+        if (!storeModule.mutations[type]) {
+          console.error(`Mutation "${type}" not found in store "${storeName}"`);
+          return;
+        }
+        const name = storeModule.mutations[type](getters, payload);
+
+        setStoresStateData(prev => {
+          const newState = {
+            ...prev,
+            [storeName]: {
+              ...prev[storeName],
+              [name]: payload,
+            },
+          };
+
+          return newState;
+        });
+      };
+
+      const actions = {};
+      Object.keys(storeModule.actions).forEach(actionName => {
+        actions[actionName] = (...args) =>
+          storeModule.actions[actionName]({commit, getters}, ...args);
+      });
+
+      result[storeName] = {getters, actions};
+    });
+
+    return result;
+  }, [storesStateData]);
 
   return (
     <StoreContext.Provider value={storesState}>
@@ -70,7 +90,7 @@ export function getStore(storeName) {
   const storesState = useContext(StoreContext);
   if (!storesState || !storesState[storeName]) {
     throw new Error(
-      `Store "${storeName}" not found. Ensure StoreProvider is used and stores are defined.`,
+      `Store "${storeName}" not found. Ensure StoreProvider is used.`,
     );
   }
   return storesState[storeName];
