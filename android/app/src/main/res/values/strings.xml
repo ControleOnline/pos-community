@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">PDV Controle Online</string>
-    <string name="schema_return">pdv</string>
+    <string name="schema_return">ControleOnline</string>
 </resources>

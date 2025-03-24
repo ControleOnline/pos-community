@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import java.nio.charset.StandardCharsets;
 
 public class InfinitePay extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "pdv.controleonline.com";
+    private static final String CALLBACK = "ControleOnline://PDV";
     private static final String SCHEME = "infinitepaydash";
     private static final String PAYMENT = "infinitetap-app";
 

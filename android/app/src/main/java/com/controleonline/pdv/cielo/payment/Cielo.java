@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
 public class Cielo extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "pdv.controleonline.com";
+    private static final String CALLBACK = "ControleOnline://PDV";
     private static final String SCHEME = "lio";
     private static final String PAYMENT = "payment";
     private static final String CANCEL = "payment-reversal";
