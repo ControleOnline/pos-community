@@ -1,4 +1,4 @@
-package com.controleonline.pdv.payment;
+package com.controleonline.pdv.infinitepay.payment;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -11,26 +11,23 @@ import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Base64;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.nio.charset.StandardCharsets;
 
-public class Payment extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "pdv://payment";
-    private static final String SCHEME = "lio";
-    private static final String PAYMENT = "payment";
-    private static final String CANCEL = "payment-reversal";
+public class InfinitePay extends ReactContextBaseJavaModule {
+    private static final String CALLBACK = "pdv.controleonline.com";
+    private static final String SCHEME = "infinitepaydash";
+    private static final String PAYMENT = "infinitetap-app";
 
     private Promise mPromise;
     private ReactApplicationContext mContext;
 
-    public Payment(ReactApplicationContext reactContext) {
+    public InfinitePay(ReactApplicationContext reactContext) {
         super(reactContext);
         mContext = reactContext;
         mContext.addActivityEventListener(mActivityEventListener);
@@ -38,7 +35,7 @@ public class Payment extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "Payment";
+        return "InfinitePay";
     }
 
     @ReactMethod
@@ -51,7 +48,8 @@ public class Payment extends ReactContextBaseJavaModule {
             uriBuilder.scheme(SCHEME)
                     .authority(PAYMENT)
                     .appendQueryParameter("request", base64)
-                    .appendQueryParameter("urlCallback", CALLBACK);
+                    .appendQueryParameter("result_url", CALLBACK)
+                    .appendQueryParameter("af_force_deeplink", "true");
 
             final Activity activity = getCurrentActivity();
 
@@ -62,40 +60,6 @@ public class Payment extends ReactContextBaseJavaModule {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setData(uriBuilder.build());
-            activity.startActivity(intent);
-        } catch (Exception e) {
-            WritableMap params = Arguments.createMap();
-            params.putInt("code", 5000);
-            params.putString("result", e.getMessage());
-            params.putBoolean("success", false);
-
-            mPromise.resolve(params);
-            mPromise = null;
-        }
-
-    }
-    @ReactMethod
-    public void cancel(@NonNull String json, Promise promise) {
-        try {
-            mPromise = promise;
-            String base64 = Base64.encodeToString(json.getBytes(), Base64.NO_WRAP);
-
-            Uri.Builder uriBuilder = new Uri.Builder();
-            uriBuilder.authority(CANCEL);
-            uriBuilder.scheme(SCHEME);
-            uriBuilder.appendQueryParameter("request", base64);
-            uriBuilder.appendQueryParameter("urlCallback", CALLBACK);
-
-            final Activity activity = getCurrentActivity();
-
-            if (activity == null) {
-                throw new Exception("Not found activity");
-            }
-
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setData(uriBuilder.build());
-
             activity.startActivity(intent);
         } catch (Exception e) {
             WritableMap params = Arguments.createMap();
@@ -119,13 +83,13 @@ public class Payment extends ReactContextBaseJavaModule {
                     if (response != null) {
                         try {
                             byte[] decoded = Base64.decode(response, Base64.DEFAULT);
-                            String json =  new String(decoded, StandardCharsets.UTF_8);
-                        
+                            String json = new String(decoded, StandardCharsets.UTF_8);
+                            
                             params.putString("result", json);
                             params.putString("code", "0");
                             params.putBoolean("success", true);
                         } catch (Exception ex) {
-                            params  = Arguments.createMap();
+                            params = Arguments.createMap();
                             params.putString("result", ex.toString());
                             params.putString("code", "5010");
                             params.putBoolean("success", false);
@@ -139,7 +103,7 @@ public class Payment extends ReactContextBaseJavaModule {
             params.putBoolean("success", false);
         }
 
-        return  params;
+        return params;
     }
 
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
@@ -149,11 +113,10 @@ public class Payment extends ReactContextBaseJavaModule {
 
             WritableMap params = createParams(intent);
 
-            if(mPromise != null && params != null) {
+            if (mPromise != null && params != null) {
                 mPromise.resolve(params);
                 mPromise = null;
             }
         }
-
     };
 }

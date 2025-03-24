@@ -1,4 +1,4 @@
-package com.controleonline.pdv.payment;
+package com.controleonline.pdv.infinitepay.payment;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,21 +9,17 @@ import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.NativeModule;
 
-public class PaymentPackage implements ReactPackage{
+public class InfinitePayPackage implements ReactPackage {
 
     @Override
-    public List<ViewManager> 
-    createViewManagers(ReactApplicationContext reactContext) {
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<NativeModule> 
-    createNativeModules(ReactApplicationContext reactContext) {
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<NativeModule>();
-        modules.add(new Payment(reactContext) );
+        modules.add(new InfinitePay(reactContext));
         return modules;
-
     }
-    
 }

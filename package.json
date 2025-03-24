@@ -16,6 +16,7 @@
     "@react-navigation/native-stack": "^6.9.26",
     "axios": "^1.6.8",
     "expo": "^51.0.12",
+    "fake-indexeddb": "^6.0.0",
     "idb": "^8.0.2",
     "native-base": "^3.4.28",
     "react": "18.2.0",
