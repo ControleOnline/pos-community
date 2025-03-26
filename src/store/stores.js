@@ -4,7 +4,7 @@ import city from '@controleonline/ui-common/src/store/address/city';
 import configs from '@controleonline/ui-common/src/store/configs';
 import file from '@controleonline/ui-common/src/store/file';
 import status from '@controleonline/ui-common/src/store/status';
-import tt from '@controleonline/ui-common/src/store/tt';
+import translate from '@controleonline/ui-common/src/store/translate';
 import auth from '@controleonline/ui-login/src/store/modules/auth';
 import cart from '@controleonline/ui-orders/src/store/cart';
 import orders from '@controleonline/ui-orders/src/store/orders';
@@ -45,7 +45,7 @@ export default {
   product_group_product,
   product_group_feedstock,
   status,
-  tt,
+  translate,
   theme,
   address,
   documents,
