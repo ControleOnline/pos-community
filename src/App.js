@@ -55,7 +55,7 @@ const createLocalStorageSync = async () => {
 export default function App() {
   const [storageReady, setStorageReady] = useState(false);
   const [navigationReady, setNavigationReady] = useState(false);
-  
+
   useEffect(() => {
     createLocalStorageSync().then(localStorageSync => {
       window.localStorage = localStorageSync;

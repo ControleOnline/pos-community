@@ -1,4 +1,4 @@
-package com.controleonline.pdv.infinitepay.payment;
+package com.controleonline.pos.infinitepay.payment;
 
 import java.util.Collections;
 import java.util.List;

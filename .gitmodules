@@ -25,3 +25,6 @@
 [submodule "modules/controleonline/ui-financial"]
 	path = modules/controleonline/ui-financial
 	url = https://github.com/ControleOnline/ui-financial.git
+[submodule "modules/controleonline/ui-translate"]
+	path = modules/controleonline/ui-translate
+	url = https://github.com/ControleOnline/ui-translate.git

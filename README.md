@@ -1,8 +1,8 @@
-# PDV Controle Online
+# POS Controle Online
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/controleonline/pdv-community/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/controleonline/pdv-platform-community/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/controleonline/pos-community/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/controleonline/pos-platform-community/?branch=master)
 
-<a href="https://github.com/ControleOnline/pdv-community" target="_blank">
+<a href="https://github.com/ControleOnline/pos-community" target="_blank">
   <img src="https://www.cielo.com.br/assets_cielo/cielo_store/features/mobile/cielo-lio.png" />
 </a>
 
@@ -31,8 +31,8 @@ git submodule update --recursive
 
 ### Top contributors
 
-<a href="https://github.com/ControleOnline/pdv-community/graphs/contributors" target="_blank">
-  <img src="https://contrib.rocks/image?repo=ControleOnline/pdv-community" />
+<a href="https://github.com/ControleOnline/pos-community/graphs/contributors" target="_blank">
+  <img src="https://contrib.rocks/image?repo=ControleOnline/pos-community" />
 </a>
 
 

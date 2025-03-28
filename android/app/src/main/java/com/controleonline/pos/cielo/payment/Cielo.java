@@ -1,4 +1,4 @@
-package com.controleonline.pdv.cielo.payment;
+package com.controleonline.pos.cielo.payment;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 
 public class Cielo extends ReactContextBaseJavaModule {
-    private static final String CALLBACK = "ControleOnline://PDV";
+    private static final String CALLBACK = "ControleOnline://POS";
     private static final String SCHEME = "lio";
     private static final String PAYMENT = "payment";
     private static final String CANCEL = "payment-reversal";

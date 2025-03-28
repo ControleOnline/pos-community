@@ -76,9 +76,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.controleonline.pdv"
+    namespace "com.controleonline.pos"
     defaultConfig {
-        applicationId "com.controleonline.pdv"
+        applicationId "com.controleonline.pos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
