@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.nio.charset.StandardCharsets;
+import org.json.JSONObject;
 
 public class Cielo extends ReactContextBaseJavaModule {
     private static final String CALLBACK = "ControleOnline://POS";
@@ -120,14 +121,20 @@ public class Cielo extends ReactContextBaseJavaModule {
                         try {
                             byte[] decoded = Base64.decode(response, Base64.DEFAULT);
                             String json = new String(decoded, StandardCharsets.UTF_8);
-                        
+                            boolean error = false;
+                            org.json.JSONObject jsonObject = new org.json.JSONObject(json);
+                            int code = jsonObject.getInt("code");
+
+                            if (code == 1 || code == 2)
+                                error = true;
+
                             params.putString("result", json);
-                            params.putString("code", "0");
-                            params.putBoolean("success", true);
+                            params.putInt("code", code);
+                            params.putBoolean("success", !error);
                         } catch (Exception ex) {
                             params = Arguments.createMap();
                             params.putString("result", ex.toString());
-                            params.putString("code", "5010");
+                            params.putInt("code", 5010);
                             params.putBoolean("success", false);
                         }
                     }
