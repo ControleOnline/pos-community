@@ -26,6 +26,7 @@ public class Cielo extends ReactContextBaseJavaModule {
     private static final String CALLBACK = "ControleOnline://POS";
     private static final String SCHEME = "lio";
     private static final String PAYMENT = "payment";
+    private static final String PRINT = "print";
     private static final String CANCEL = "payment-reversal";
 
     private Promise mPromise;
@@ -147,6 +148,34 @@ public class Cielo extends ReactContextBaseJavaModule {
         }
 
         return params;
+    }
+
+    @ReactMethod
+    public void print(String json, Promise promise) {
+        try {
+            mPromise = promise;
+            String base64 = Base64.encodeToString(json.getBytes(), Base64.NO_WRAP);
+            Uri.Builder uriBuilder = new Uri.Builder();
+            uriBuilder.scheme(SCHEME)
+                    .authority(PRINT)
+                    .appendQueryParameter("request", base64)
+                    .appendQueryParameter("urlCallback", CALLBACK);
+            final Activity activity = getCurrentActivity();
+            if (activity == null) {
+                throw new Exception("Not found activity");
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setData(uriBuilder.build());
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            WritableMap params = Arguments.createMap();
+            params.putInt("code", 5000);
+            params.putString("result", e.getMessage());
+            params.putBoolean("success", false);
+            mPromise.resolve(params);
+            mPromise = null;
+        }
     }
 
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
