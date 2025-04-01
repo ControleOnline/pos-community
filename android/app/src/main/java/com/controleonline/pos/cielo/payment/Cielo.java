@@ -124,7 +124,7 @@ public class Cielo extends ReactContextBaseJavaModule {
                             String json = new String(decoded, StandardCharsets.UTF_8);
                             boolean error = false;
                             org.json.JSONObject jsonObject = new org.json.JSONObject(json);
-                            int code = jsonObject.getInt("code");
+                            int code = jsonObject.optInt("code", -1);
 
                             if (code == 1 || code == 2)
                                 error = true;
