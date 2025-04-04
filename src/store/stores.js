@@ -5,6 +5,7 @@ import configs from '@controleonline/ui-common/src/store/configs';
 import file from '@controleonline/ui-common/src/store/file';
 import status from '@controleonline/ui-common/src/store/status';
 import device from '@controleonline/ui-common/src/store/device';
+import device_config from '@controleonline/ui-common/src/store/device/device_config';
 import translate from '@controleonline/ui-translate/src/store/translate';
 import auth from '@controleonline/ui-login/src/store/modules/auth';
 import cart from '@controleonline/ui-orders/src/store/cart';
@@ -37,6 +38,7 @@ export default {
   configs,
   file,
   device,
+  device_config,
   orders,
   order_products,
   expanded_order_products,
