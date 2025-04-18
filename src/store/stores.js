@@ -6,6 +6,7 @@ import file from '@controleonline/ui-common/src/store/file';
 import status from '@controleonline/ui-common/src/store/status';
 import device from '@controleonline/ui-common/src/store/device';
 import device_config from '@controleonline/ui-common/src/store/device_config';
+import print from '@controleonline/ui-common/src/store/print';
 import translate from '@controleonline/ui-translate/src/store/translate';
 import auth from '@controleonline/ui-login/src/store/modules/auth';
 import cart from '@controleonline/ui-orders/src/store/cart';
@@ -51,6 +52,7 @@ export default {
   status,
   translate,
   theme,
+  print,
   address,
   documents,
   phones,
