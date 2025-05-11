@@ -1,1 +1,5 @@
-export { StoreProvider, getStore } from '@controleonline/ui-common/src/react/stores';
+export {
+  StoreProvider,
+  getStore,
+  getAllStores,
+} from '@controleonline/ui-common/src/react/stores';
