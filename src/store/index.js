@@ -1,5 +1,5 @@
 export {
   StoreProvider,
-  useGetStore,
-  useGetAllStores,
+  getStore,
+  getAllStores,
 } from '@controleonline/ui-common/src/react/stores';
