@@ -7,6 +7,7 @@ import {api} from '@controleonline/ui-common/src/api';
 import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
 import {StoreProvider} from '@store';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
+import {Platform} from 'react-native';
 
 const createLocalStorageSync = async () => {
   let store = {};
@@ -58,11 +59,12 @@ export default function App() {
 
   useEffect(() => {
     createLocalStorageSync().then(localStorageSync => {
-      window.localStorage = localStorageSync;
+      if (Platform.OS !== 'web') window.localStorage = localStorageSync;
       window.api = api;
       setStorageReady(true);
     });
   }, []);
+
   if (!storageReady) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
