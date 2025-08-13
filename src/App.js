@@ -5,10 +5,10 @@ import Routes from './routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {api} from '@controleonline/ui-common/src/api';
 import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
-import {StoreProvider} from '@store';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
 import {PaperProvider} from 'react-native-paper';
 import {MessageProvider} from './services/MessageService';
+import TouchSoundProvider from './services/TouchSoundProvider';
 
 const createLocalStorageSync = async () => {
   let store = {};
@@ -75,10 +75,10 @@ export default function App() {
   }
 
   return (
-    <StoreProvider>
-      <PaperProvider>
-        <MessageProvider>
-          <DefaultProvider>
+    <PaperProvider>
+      <MessageProvider>
+        <DefaultProvider>
+          <TouchSoundProvider>
             <NavigationContainer onReady={() => setNavigationReady(true)}>
               <StatusBar
                 barStyle={'light-content'}
@@ -87,9 +87,9 @@ export default function App() {
               {navigationReady && <CheckLogin />}
               <Routes />
             </NavigationContainer>
-          </DefaultProvider>
-        </MessageProvider>
-      </PaperProvider>
-    </StoreProvider>
+          </TouchSoundProvider>
+        </DefaultProvider>
+      </MessageProvider>
+    </PaperProvider>
   );
 }

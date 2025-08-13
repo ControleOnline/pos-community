@@ -1,0 +1,66 @@
+import os
+import re
+
+PROJECT_ROOT = './'  # Ajuste o caminho do seu projeto
+
+EXTENSIONS = ('.js', '.jsx', '.ts', '.tsx')
+
+# Regex para pegar os 3 casos: getters+actions, só getters, só actions
+pattern_store_usage = re.compile(
+    r"const\s+\{((?:getters:\s*(\w+))?(?:,\s*)?(?:actions:\s*(\w+))?)\}\s*=\s*getStore\(\s*['\"](\w+)['\"]\s*\)\s*;"
+)
+
+# Regex para encontrar o import getStore
+pattern_import = re.compile(r"import\s+\{getStore\}\s+from\s+['\"]@store['\"]\s*;")
+
+def refactor_file(filepath):
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Trocar import sempre que encontrar
+    new_content = pattern_import.sub("import {useStores} from '@store';", content)
+    changed = (new_content != content)
+
+    # Refatora os usos de getStore para useStores
+    matches = list(pattern_store_usage.finditer(new_content))
+    if matches:
+        for match in reversed(matches):
+            whole_props = match.group(1)     # exemplo "getters: fooGetters, actions: fooActions"
+            getters_var = match.group(2)     # ex: fooGetters ou None
+            actions_var = match.group(3)     # ex: fooActions ou None
+            store_name = match.group(4)      # ex: foo
+
+            store_var = f"{store_name}Store"
+
+            lines = [f"const {store_var} = useStores(state => state.{store_name});"]
+
+            if getters_var:
+                lines.append(f"const {getters_var} = {store_var}.getters;")
+            if actions_var:
+                lines.append(f"const {actions_var} = {store_var}.actions;")
+
+            replacement = "\n".join(lines)
+
+            start, end = match.span()
+            new_content = new_content[:start] + replacement + new_content[end:]
+        changed = True
+
+    if changed:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        print(f"Refatorado: {filepath}")
+        return True
+    return False
+
+def walk_project(root):
+    count = 0
+    for dirpath, _, files in os.walk(root):
+        for file in files:
+            if file.endswith(EXTENSIONS):
+                path = os.path.join(dirpath, file)
+                if refactor_file(path):
+                    count += 1
+    print(f"\nTotal de arquivos refatorados: {count}")
+
+if __name__ == "__main__":
+    walk_project(PROJECT_ROOT)

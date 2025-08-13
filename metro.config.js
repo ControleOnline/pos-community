@@ -1,5 +1,5 @@
-const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
-const path = require("path");
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+const path = require('path');
 
 /**
  * Metro configuration
@@ -10,7 +10,7 @@ const path = require("path");
 const config = {
   resolver: {
     extraNodeModules: {
-      "@store": path.resolve(__dirname, "src/store"),
+      '@store': path.resolve(__dirname, 'src/store'),
     },
   },
 };

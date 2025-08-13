@@ -70,3 +70,4 @@ package-lock.json
 .expo
 .expo/*
 *.lock
+*.sh
