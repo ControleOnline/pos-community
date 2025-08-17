@@ -1,4 +1,4 @@
-import type {IPayment} from './Payment';
+import type {IPayment} from './PaymentModule';
 
 interface NativeModules {
   Payment: IPayment;

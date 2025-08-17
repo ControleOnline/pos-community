@@ -9,6 +9,8 @@ import {StoreProvider} from '@store';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
 import {PaperProvider} from 'react-native-paper';
 import {MessageProvider} from './services/MessageService';
+import TouchSoundProvider from './services/TouchSoundProvider';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const createLocalStorageSync = async () => {
   let store = {};
@@ -75,21 +77,25 @@ export default function App() {
   }
 
   return (
-    <StoreProvider>
-      <PaperProvider>
-        <MessageProvider>
-          <DefaultProvider>
-            <NavigationContainer onReady={() => setNavigationReady(true)}>
-              <StatusBar
-                barStyle={'light-content'}
-                backgroundColor={'#1B5587'}
-              />
-              {navigationReady && <CheckLogin />}
-              <Routes />
-            </NavigationContainer>
-          </DefaultProvider>
-        </MessageProvider>
-      </PaperProvider>
-    </StoreProvider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <TouchSoundProvider>
+        <StoreProvider>
+          <PaperProvider>
+            <MessageProvider>
+              <DefaultProvider>
+                <NavigationContainer onReady={() => setNavigationReady(true)}>
+                  <StatusBar
+                    barStyle={'light-content'}
+                    backgroundColor={'#1B5587'}
+                  />
+                  {navigationReady && <CheckLogin />}
+                  <Routes />
+                </NavigationContainer>
+              </DefaultProvider>
+            </MessageProvider>
+          </PaperProvider>
+        </StoreProvider>
+      </TouchSoundProvider>
+    </GestureHandlerRootView>
   );
 }
