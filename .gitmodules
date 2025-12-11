@@ -31,3 +31,6 @@
 [submodule "modules/controleonline/ui-crm"]
 	path = modules/controleonline/ui-crm
 	url = https://github.com/ControleOnline/ui-crm.git
+[submodule "modules/controleonline/ui-manager"]
+	path = modules/controleonline/ui-manager
+	url = https://github.com/ControleOnline/ui-manager.git
