@@ -8,8 +8,8 @@ import {DefaultProvider} from '@controleonline/ui-common/src/react/components/De
 import {StoreProvider} from '@store';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
 import {PaperProvider} from 'react-native-paper';
-import {MessageProvider} from './services/MessageService';
-import TouchSoundProvider from './services/TouchSoundProvider';
+import {MessageProvider} from '@controleonline/ui-common/src/react/components/MessageService';
+import TouchSoundProvider from '@controleonline/ui-common/src/react/components/TouchSoundProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const createLocalStorageSync = async () => {

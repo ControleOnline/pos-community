@@ -3,7 +3,13 @@ def env = new Properties()
 if (androidPropertiesFile.exists()) {
     env.load(new FileInputStream(androidPropertiesFile))
 } else {
-    throw new GradleException("Arquivo keystore.properties não encontrado em: ${androidPropertiesFile.absolutePath}")
+    // Set default values for development
+    env["MYAPP_UPLOAD_STORE_FILE"] = ""
+    env["MYAPP_UPLOAD_KEY_ALIAS"] = ""
+    env["MYAPP_UPLOAD_STORE_PASSWORD"] = ""
+    env["MYAPP_UPLOAD_KEY_PASSWORD"] = ""
+    env["VERSION_CODE"] = "1"
+    env["VERSION_NAME"] = "1.0.0"
 }
 
 project.ext {
@@ -18,10 +24,10 @@ project.ext {
 
 buildscript {
     ext {
-        buildToolsVersion = "33.0.3"
+        buildToolsVersion = "34.0.0"
         minSdkVersion = 24
-        compileSdkVersion = 34
-        targetSdkVersion = 34 
+        compileSdkVersion = 35
+        targetSdkVersion = 35 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"
     }
@@ -30,7 +36,48 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle")
+        classpath("com.android.tools.build:gradle:8.1.2")
         classpath("com.facebook.react:react-native-gradle-plugin")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+    
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            android {
+                buildFeatures {
+                    buildConfig true
+                }
+                
+                // Set namespace for React Native libraries that don't have it
+                if (project.name == 'react-native-safe-area-context') {
+                    namespace 'com.th3rdwave.safeareacontext'
+                }
+                if (project.name == 'react-native-async-storage_async-storage') {
+                    namespace 'com.reactnativecommunity.asyncstorage'
+                }
+                if (project.name == 'react-native-device-info') {
+                    namespace 'com.learnium.RNDeviceInfo'
+                }
+                if (project.name == 'react-native-picker_picker') {
+                    namespace 'com.reactnativecommunity.picker'
+                }
+                if (project.name == 'react-native-screens') {
+                    namespace 'com.swmansion.rnscreens'
+                }
+                if (project.name == 'react-native-sound') {
+                    namespace 'com.zmxv.RNSound'
+                }
+                if (project.name == 'react-native-vector-icons') {
+                    namespace 'com.oblador.vectoricons'
+                }
+            }
+        }
     }
 }

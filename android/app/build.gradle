@@ -77,6 +77,10 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     namespace "com.controleonline.pos"
+    
+    buildFeatures {
+        buildConfig true
+    }
     defaultConfig {
         applicationId "com.controleonline.pos"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -86,10 +90,12 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file(rootProject.ext.storeFile)
-            storePassword rootProject.ext.storePassword
-            keyAlias rootProject.ext.keyAlias
-            keyPassword rootProject.ext.keyPassword
+            if (rootProject.ext.storeFile && !rootProject.ext.storeFile.isEmpty()) {
+                storeFile file(rootProject.ext.storeFile)
+                storePassword rootProject.ext.storePassword
+                keyAlias rootProject.ext.keyAlias
+                keyPassword rootProject.ext.keyPassword
+            }
         }
         debug {
             storeFile file('debug.keystore')
@@ -105,10 +111,13 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            if (rootProject.ext.storeFile && !rootProject.ext.storeFile.isEmpty()) {
+                signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
+            }
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
         }
     }
 }
