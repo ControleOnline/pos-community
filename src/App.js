@@ -77,8 +77,6 @@ export default function App() {
   }
 
   return (
-    //<GestureHandlerRootView style={{flex: 1}}>
-    //  <TouchSoundProvider>
     <StoreProvider>
       <PaperProvider>
         <MessageProvider>
@@ -95,7 +93,5 @@ export default function App() {
         </MessageProvider>
       </PaperProvider>
     </StoreProvider>
-    //</TouchSoundProvider>
-    //</GestureHandlerRootView>
   );
 }
