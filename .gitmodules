@@ -28,3 +28,6 @@
 [submodule "modules/controleonline/ui-translate"]
 	path = modules/controleonline/ui-translate
 	url = https://github.com/ControleOnline/ui-translate.git
+[submodule "modules/controleonline/ui-crm"]
+	path = modules/controleonline/ui-crm
+	url = https://github.com/ControleOnline/ui-crm.git
