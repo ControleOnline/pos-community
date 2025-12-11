@@ -5,7 +5,7 @@ import Routes from './routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {api} from '@controleonline/ui-common/src/api';
 import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
-import {StoreProvider} from '@store';
+//import {StoreProvider} from '@store';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
 import {PaperProvider} from 'react-native-paper';
 import {MessageProvider} from '@controleonline/ui-common/src/react/components/MessageService';
@@ -77,7 +77,9 @@ export default function App() {
   }
 
   return (
-    <StoreProvider>
+    //<GestureHandlerRootView style={{flex: 1}}>
+    //  <TouchSoundProvider>
+    //<StoreProvider>
       <PaperProvider>
         <MessageProvider>
           <DefaultProvider>
@@ -92,6 +94,8 @@ export default function App() {
           </DefaultProvider>
         </MessageProvider>
       </PaperProvider>
-    </StoreProvider>
+    //</StoreProvider>
+    //</TouchSoundProvider>
+    //</GestureHandlerRootView>
   );
 }
