@@ -33,7 +33,7 @@
     "react-native-sectioned-multi-select": "^0.10.0",
     "react-native-sound": "^0.11.2",
     "react-native-vector-icons": "^10.3.0",
-    "zustand": "^5.0.7"
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
