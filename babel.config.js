@@ -9,6 +9,7 @@ module.exports = api => {
     '@controleonline': './modules/controleonline',
     '@env': './config/env.local.js',
     '@stores': './src/store/stores.js',
+    '@controleonline-rn': './node_modules/@controleonline',
   };
 
   return {
