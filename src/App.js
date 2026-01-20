@@ -1,16 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {StatusBar, View, ActivityIndicator, Text} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { StatusBar, View, ActivityIndicator, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import Routes from './routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {api} from '@controleonline/ui-common/src/api';
-import {DefaultProvider} from '@controleonline/ui-common/src/react/components/DefaultProvider';
-//import {StoreProvider} from '@store';
+import { api } from '@controleonline/ui-common/src/api';
+import { DefaultProvider } from '@controleonline/ui-common/src/react/components/DefaultProvider';
 import CheckLogin from '@controleonline/ui-login/src/react/components/CheckLogin';
-import {PaperProvider} from 'react-native-paper';
-import {MessageProvider} from '@controleonline/ui-common/src/react/components/MessageService';
-//import TouchSoundProvider from '@controleonline/ui-common/src/react/components/TouchSoundProvider';
-//import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { PaperProvider } from 'react-native-paper';
+import { MessageProvider } from '@controleonline/ui-common/src/react/components/MessageService';
+import TouchFeedbackProvider from '@controleonline/ui-common/src/react/components/TouchFeedbackProvider';
 
 const createLocalStorageSync = async () => {
   let store = {};
@@ -69,18 +67,16 @@ export default function App() {
   }, []);
   if (!storageReady) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#1B5587" />
-        <Text style={{marginTop: 10}}>Carregando...</Text>
+        <Text style={{ marginTop: 10 }}>Carregando...</Text>
       </View>
     );
   }
 
   return (
-    //<GestureHandlerRootView style={{flex: 1}}>
-    //  <TouchSoundProvider>
-    //<StoreProvider>
-      <PaperProvider>
+    <PaperProvider>
+      <TouchFeedbackProvider>
         <MessageProvider>
           <DefaultProvider>
             <NavigationContainer onReady={() => setNavigationReady(true)}>
@@ -93,9 +89,8 @@ export default function App() {
             </NavigationContainer>
           </DefaultProvider>
         </MessageProvider>
-      </PaperProvider>
-    //</StoreProvider>
-    //</TouchSoundProvider>
-    //</GestureHandlerRootView>
+      </TouchFeedbackProvider>
+    </PaperProvider>
+
   );
 }
