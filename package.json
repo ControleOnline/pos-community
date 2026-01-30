@@ -19,8 +19,8 @@
     "axios": "^1.6.8",
     "events": "^3.3.0",
     "expo": "^52.0.46",
-    "expo-asset": "^12.0.11",
-    "expo-font": "^14.0.10",
+    "expo-asset": "^12.0.12",
+    "expo-font": "^14.0.11",
     "fake-indexeddb": "^6.0.0",
     "idb": "^8.0.2",
     "md5": "^2.3.0",
@@ -35,7 +35,7 @@
     "react-native-sectioned-multi-select": "^0.10.0",
     "react-native-sound": "^0.11.2",
     "react-native-vector-icons": "^10.3.0",
-    "zustand": "^5.0.9"
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
