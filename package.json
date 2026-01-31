@@ -59,6 +59,6 @@
     "@react-native-community/cli": "latest"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
