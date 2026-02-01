@@ -1,9 +1,30 @@
+buildscript {
+    ext {
+        minSdkVersion = 24
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        kotlinVersion = "1.9.10"
+        ndkVersion = "26.1.10909125"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.3.1")
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+plugins {
+    id 'com.facebook.react' apply false
+}
+
 def androidPropertiesFile = rootProject.file("../config/android/env.properties")
 def env = new Properties()
 if (androidPropertiesFile.exists()) {
     env.load(new FileInputStream(androidPropertiesFile))
 } else {
-    // Set default values for development
     env["MYAPP_UPLOAD_STORE_FILE"] = ""
     env["MYAPP_UPLOAD_KEY_ALIAS"] = ""
     env["MYAPP_UPLOAD_STORE_PASSWORD"] = ""
@@ -21,66 +42,47 @@ project.ext {
     versionName = env["VERSION_NAME"]
 }
 
-buildscript {
-    ext {
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 24
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        kotlinVersion = "1.9.10"
-        ndkVersion = "26.1.10909125"
-
-    }
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:9.0.0")
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
-}
-
 allprojects {
     repositories {
         google()
         mavenCentral()
-        
     }
-    
+
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
             android {
                 buildFeatures {
                     buildConfig true
                 }
-                
-                // Set namespace for React Native libraries that don't have it
-                if (project.name == 'react-native-safe-area-context') {
-                    namespace 'com.th3rdwave.safeareacontext'
-                }
-                if (project.name == 'react-native-async-storage_async-storage') {
-                    namespace 'com.reactnativecommunity.asyncstorage'
-                }
-                if (project.name == 'react-native-device-info') {
-                    namespace 'com.learnium.RNDeviceInfo'
-                }
-                if (project.name == 'react-native-picker_picker') {
-                    namespace 'com.reactnativecommunity.picker'
-                }
-                if (project.name == 'react-native-screens') {
-                    namespace 'com.swmansion.rnscreens'
-                }
-                if (project.name == 'react-native-sound') {
-                    namespace 'com.zmxv.RNSound'
-                }
-                if (project.name == 'react-native-vector-icons') {
-                    namespace 'com.oblador.vectoricons'
+
+                switch(project.name) {
+                    case 'react-native-safe-area-context':
+                        namespace 'com.th3rdwave.safeareacontext'
+                        break
+                    case 'react-native-async-storage_async-storage':
+                        namespace 'com.reactnativecommunity.asyncstorage'
+                        break
+                    case 'react-native-device-info':
+                        namespace 'com.learnium.RNDeviceInfo'
+                        break
+                    case 'react-native-picker_picker':
+                        namespace 'com.reactnativecommunity.picker'
+                        break
+                    case 'react-native-screens':
+                        namespace 'com.swmansion.rnscreens'
+                        break
+                    case 'react-native-sound':
+                        namespace 'com.zmxv.RNSound'
+                        break
+                    case 'react-native-vector-icons':
+                        namespace 'com.oblador.vectoricons'
+                        break
                 }
             }
         }
     }
 }
+
 subprojects {
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
@@ -88,5 +90,15 @@ subprojects {
                 compileSdkVersion rootProject.ext.compileSdkVersion
             }
         }
+
+        if (project.plugins.hasPlugin('com.android.library')) {
+            project.apply plugin: 'com.facebook.react'
+        }
+    }
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(org.gradle.api.tasks.compile.JavaCompile).all { compileTask ->
+        compileTask.options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
     }
 }
