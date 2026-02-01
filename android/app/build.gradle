@@ -52,10 +52,7 @@ dependencies {
     implementation project(':@controleonline_react-native-cielo-payment')
     implementation project(':@controleonline_react-native-infinitepay-payment')
     implementation project(':@react-native-async-storage_async-storage')
-    implementation project(':@react-native-picker_picker')
     implementation project(':react-native-device-info')
-    implementation project(':react-native-reanimated')
     implementation project(':react-native-sound')
     implementation project(':react-native-vector-icons')
-    implementation project(':react-native-worklets')
 }
