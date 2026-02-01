@@ -3,7 +3,7 @@ buildscript {
         minSdkVersion = 24
         compileSdkVersion = 34
         targetSdkVersion = 34
-        kotlinVersion = "1.9.10"
+        kotlinVersion = "2.2.20"
         ndkVersion = "25.2.9519653"
     }
     repositories {
@@ -11,14 +11,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.3.1")
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath('com.android.tools.build:gradle')
+        classpath('com.facebook.react:react-native-gradle-plugin')
+        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
     }
 }
 
-plugins {
-    id 'com.facebook.react' apply false
-}
 
 def androidPropertiesFile = rootProject.file("../config/android/env.properties")
 def env = new Properties()
@@ -47,58 +45,8 @@ allprojects {
         google()
         mavenCentral()
     }
-
-    afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            android {
-                buildFeatures {
-                    buildConfig true
-                }
-
-                switch(project.name) {
-                    case 'react-native-safe-area-context':
-                        namespace 'com.th3rdwave.safeareacontext'
-                        break
-                    case 'react-native-async-storage_async-storage':
-                        namespace 'com.reactnativecommunity.asyncstorage'
-                        break
-                    case 'react-native-device-info':
-                        namespace 'com.learnium.RNDeviceInfo'
-                        break
-                    case 'react-native-picker_picker':
-                        namespace 'com.reactnativecommunity.picker'
-                        break
-                    case 'react-native-screens':
-                        namespace 'com.swmansion.rnscreens'
-                        break
-                    case 'react-native-sound':
-                        namespace 'com.zmxv.RNSound'
-                        break
-                    case 'react-native-vector-icons':
-                        namespace 'com.oblador.vectoricons'
-                        break
-                }
-            }
-        }
-    }
 }
 
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            project.android {
-                compileSdkVersion rootProject.ext.compileSdkVersion
-            }
-        }
 
-        if (project.plugins.hasPlugin('com.android.library')) {
-            project.apply plugin: 'com.facebook.react'
-        }
-    }
-}
-
-gradle.projectsEvaluated {
-    tasks.withType(org.gradle.api.tasks.compile.JavaCompile).all { compileTask ->
-        compileTask.options.compilerArgs += ['-Xlint:deprecation', '-Xlint:unchecked']
-    }
-}
+apply plugin: "expo-root-project"
+apply plugin: "com.facebook.react.rootproject"

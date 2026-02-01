@@ -1,38 +1,39 @@
 pluginManagement {
-    includeBuild('../node_modules/@react-native/gradle-plugin')
-
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
+  def reactNativeGradlePlugin = new File(
+    providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })")
+    }.standardOutput.asText.get().trim()
+  ).getParentFile().absolutePath
+  includeBuild(reactNativeGradlePlugin)
+  
+  def expoPluginsPath = new File(
+    providers.exec {
+      workingDir(rootDir)
+      commandLine("node", "--print", "require.resolve('expo-modules-autolinking/package.json', { paths: [require.resolve('expo/package.json')] })")
+    }.standardOutput.asText.get().trim(),
+    "../android/expo-gradle-plugin"
+  ).absolutePath
+  includeBuild(expoPluginsPath)
 }
 
 plugins {
-    id 'com.facebook.react.settings'
+  id("com.facebook.react.settings")
+  id("expo-autolinking-settings")
 }
 
 extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
+  if (System.getenv('EXPO_USE_COMMUNITY_AUTOLINKING') == '1') {
     ex.autolinkLibrariesFromCommand()
+  } else {
+    ex.autolinkLibrariesFromCommand(expoAutolinking.rnConfigCommand)
+  }
 }
+expoAutolinking.useExpoModules()
 
 rootProject.name = 'pos'
+
+expoAutolinking.useExpoVersionCatalog()
+
 include ':app'
-
-include ':@controleonline_react-native-cielo-payment'
-project(':@controleonline_react-native-cielo-payment').projectDir = new File(rootProject.projectDir, '../node_modules/@controleonline/react-native-cielo-payment/android')
-
-include ':@controleonline_react-native-infinitepay-payment'
-project(':@controleonline_react-native-infinitepay-payment').projectDir = new File(rootProject.projectDir, '../node_modules/@controleonline/react-native-infinitepay-payment/android')
-
-include ':@react-native-async-storage_async-storage'
-project(':@react-native-async-storage_async-storage').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-async-storage/async-storage/android')
-
-include ':react-native-device-info'
-project(':react-native-device-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-device-info/android')
-
-include ':react-native-sound'
-project(':react-native-sound').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sound/android')
-
-include ':react-native-vector-icons'
-project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+includeBuild(expoAutolinking.reactNativeGradlePlugin)
